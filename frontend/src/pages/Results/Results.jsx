@@ -234,10 +234,13 @@ export default function Results() {
                     tickLine={false} 
                   />
                   <Tooltip 
+                    cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '4 4' }}
                     contentStyle={{ 
+                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                      borderColor: 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px', 
-                      border: 'none', 
-                      boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)' 
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                      color: '#f8fafc'
                     }} 
                     formatter={(value) => [`${value} dB HL`]}
                   />
@@ -280,10 +283,13 @@ export default function Results() {
                   <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis dataKey="freq" type="category" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} width={80} />
                   <Tooltip 
+                    cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                     contentStyle={{ 
+                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                      borderColor: 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px', 
-                      border: 'none', 
-                      boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)' 
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                      color: '#f8fafc'
                     }} 
                   />
                   <Bar dataKey="Weight" fill="#14b8a6" radius={[0, 6, 6, 0]} barSize={14} />
