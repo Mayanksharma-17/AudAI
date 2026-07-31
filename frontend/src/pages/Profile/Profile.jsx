@@ -265,7 +265,7 @@ export default function Profile() {
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                       />
                     </div>
                     <div>
@@ -275,7 +275,7 @@ export default function Profile() {
                         required
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                       />
                     </div>
                   </div>
@@ -288,7 +288,7 @@ export default function Profile() {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                       />
                     </div>
                     <div>
@@ -298,7 +298,7 @@ export default function Profile() {
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                       />
                     </div>
                   </div>
@@ -311,7 +311,7 @@ export default function Profile() {
                         required
                         value={formData.hospital}
                         onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                       />
                     </div>
                     <div>
@@ -321,7 +321,7 @@ export default function Profile() {
                         required
                         value={formData.department}
                         onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                       />
                     </div>
                   </div>
@@ -341,7 +341,7 @@ export default function Profile() {
                       value={formData.licenseNumber}
                       onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
                       placeholder="e.g. RCI-AUD-2026-9042"
-                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                     />
                   </div>
 
@@ -389,7 +389,7 @@ export default function Profile() {
                       required
                       value={formData.reportTitle}
                       onChange={(e) => setFormData({ ...formData, reportTitle: e.target.value })}
-                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                     />
                   </div>
 
@@ -400,7 +400,7 @@ export default function Profile() {
                     <select
                       value={formData.disabilityStandard}
                       onChange={(e) => setFormData({ ...formData, disabilityStandard: e.target.value })}
-                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
                     >
                       <option value="WHO">WHO Standard Pure Tone Average (500, 1000, 2000, 4000 Hz)</option>
                       <option value="MSJE">Ministry of Social Justice & Empowerment (Govt of India)</option>
