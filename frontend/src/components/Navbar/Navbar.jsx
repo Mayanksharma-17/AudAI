@@ -115,7 +115,7 @@ export default function Navbar({ toggleSidebar }) {
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
-    <header className="h-16 border-b border-slate-200/60 dark:border-slate-800/40 bg-white dark:bg-slate-950 px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm shadow-slate-100 dark:shadow-none">
+    <header className="h-16 border-b border-white/40 dark:border-slate-800/60 bg-white/75 dark:bg-slate-950/70 backdrop-blur-2xl px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm shadow-slate-100/50 dark:shadow-none">
       
       {/* FLOATING TOAST POPUP NOTIFICATION */}
       <AnimatePresence>
