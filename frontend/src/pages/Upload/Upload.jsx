@@ -156,15 +156,49 @@ export default function Upload() {
   };
 
   const downloadSampleCSV = () => {
-    const csvContent = 
-      "PatientID,PatientName,Age,Gender,L250,L500,L1000,L2000,L4000,L8000,R250,R500,R1000,R2000,R4000,R8000\n" +
-      "P-1045,Alice Johnson,54,Female,30,35,45,50,60,65,25,30,40,45,55,60";
-    
+    const names = [
+      { name: "Alice Johnson", gender: "Female" },
+      { name: "Robert Chen", gender: "Male" },
+      { name: "Anita Sharma", gender: "Female" },
+      { name: "Michael Scott", gender: "Male" },
+      { name: "Elena Rostova", gender: "Female" },
+      { name: "David Miller", gender: "Male" },
+      { name: "Sophia Patel", gender: "Female" },
+      { name: "Marcus Vance", gender: "Male" },
+      { name: "Priya Nair", gender: "Female" },
+      { name: "John Doe", gender: "Male" }
+    ];
+
+    const profiles = [
+      { type: "Normal", baseL: 10, baseR: 15, slope: 0 },
+      { type: "Mild_Loss", baseL: 30, baseR: 32, slope: 5 },
+      { type: "Moderate_Loss", baseL: 45, baseR: 48, slope: 10 },
+      { type: "Severe_Loss", baseL: 75, baseR: 80, slope: 15 },
+      { type: "High_Frequency_Drop", baseL: 15, baseR: 15, slope: 45 },
+      { type: "Asymmetric_Loss", baseL: 15, baseR: 65, slope: 5 }
+    ];
+
+    const p = profiles[Math.floor(Math.random() * profiles.length)];
+    const person = names[Math.floor(Math.random() * names.length)];
+    const pid = `P-${Math.floor(1000 + Math.random() * 9000)}`;
+    const age = Math.floor(22 + Math.random() * 55);
+
+    const freqFactors = [0, 0.1, 0.2, 0.4, 0.7, 1.0];
+    const round5 = (val) => Math.max(-10, Math.min(120, Math.round(val / 5) * 5));
+
+    const lThresholds = freqFactors.map(ff => round5(p.baseL + ff * p.slope + (Math.random() * 6 - 3)));
+    const rThresholds = freqFactors.map(ff => round5(p.baseR + ff * p.slope + (Math.random() * 6 - 3)));
+
+    const header = "PatientID,PatientName,Age,Gender,L250,L500,L1000,L2000,L4000,L8000,R250,R500,R1000,R2000,R4000,R8000";
+    const row = `${pid},${person.name},${age},${person.gender},${lThresholds.join(',')},${rThresholds.join(',')}`;
+
+    const csvContent = `${header}\n${row}`;
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "audai_sample_audiogram.csv");
+    link.setAttribute("download", `audai_sample_${p.type}_${pid}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
