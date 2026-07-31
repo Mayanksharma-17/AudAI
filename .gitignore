@@ -4,8 +4,12 @@ __pycache__/
 .venv/
 venv/
 
-# AI Models
-*.pkl
+# AI Models (uncomment if model is large, otherwise model.pkl is tracked)
+# *.pkl
+
+# Databases
+*.db
+*.sqlite3
 
 # Node
 node_modules/
