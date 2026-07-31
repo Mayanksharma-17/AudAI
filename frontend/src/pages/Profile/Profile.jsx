@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Hospital, 
@@ -9,6 +9,7 @@ import {
   CheckCircle,
   Save,
   Camera,
+  Upload,
   Award,
   FileCheck,
   Sliders,
@@ -53,6 +54,25 @@ export default function Profile() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('profile'); // 'profile', 'credentials', 'preferences'
+  const avatarInputRef = useRef(null);
+
+  const handleCustomAvatarUpload = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert("Please select a valid image file (PNG, JPG, JPEG).");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (uploadEvent) => {
+        setFormData(prev => ({
+          ...prev,
+          avatar: uploadEvent.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -181,18 +201,39 @@ export default function Profile() {
         <div className="md:col-span-1 space-y-6">
           <DashboardCard className="text-center">
             <div className="flex flex-col items-center">
-              <div className="relative group">
+              <input
+                type="file"
+                ref={avatarInputRef}
+                onChange={handleCustomAvatarUpload}
+                accept="image/*"
+                className="hidden"
+              />
+              <div 
+                onClick={() => avatarInputRef.current?.click()}
+                className="relative group cursor-pointer"
+                title="Click to upload custom profile picture"
+              >
                 <img
                   src={formData.avatar}
                   alt={formData.name}
                   className="h-28 w-28 rounded-2xl object-cover border-2 border-primary-500/40 dark:border-primary-400/40 shadow-md transition-transform group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-slate-950/40 rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
-                  <Camera className="h-6 w-6 text-white" />
+                <div className="absolute inset-0 bg-slate-950/60 rounded-2xl opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity text-white text-[10px] font-bold gap-1">
+                  <Camera className="h-6 w-6" />
+                  <span>Upload Photo</span>
                 </div>
               </div>
 
-              <h3 className="text-lg font-bold font-heading text-slate-800 dark:text-slate-200 mt-4 leading-none">
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                className="mt-3 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors shadow-sm"
+              >
+                <Upload className="h-3.5 w-3.5" />
+                Upload Custom PFP
+              </button>
+
+              <h3 className="text-lg font-bold font-heading text-slate-800 dark:text-slate-200 mt-3 leading-none">
                 {formData.name}
               </h3>
               <p className="text-xs text-primary-600 dark:text-primary-400 font-bold mt-1.5">{formData.title}</p>
@@ -206,7 +247,7 @@ export default function Profile() {
             {/* Avatar Selector */}
             <div className="mt-6 border-t border-slate-100 dark:border-slate-800/80 pt-4 text-left">
               <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                Choose Avatar Preset
+                Or Select Preset PFP
               </label>
               <div className="flex items-center gap-2 justify-center">
                 {AVATAR_PRESETS.map((preset, idx) => (
