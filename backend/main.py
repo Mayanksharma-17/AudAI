@@ -4,6 +4,7 @@ from backend.database.database import Base, engine
 from backend.models import user, patient, analysis, report
 from backend.routes.analysis import router as analysis_router
 from backend.routes.auth import router as auth_router
+from backend.routes.patient import router as patient_router
 
 # Initialize database tables
 Base.metadata.create_all(bind=engine)
@@ -25,6 +26,7 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(auth_router)
+app.include_router(patient_router)
 app.include_router(analysis_router)
 
 @app.get("/")
