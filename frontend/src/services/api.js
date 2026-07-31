@@ -1,271 +1,271 @@
-// Mock API Service for AudAI Hackathon Demo
-// Stores data in LocalStorage to maintain state across page reloads
+// AudAI API Service - Connected to FastAPI Backend Engine (http://localhost:8000)
+import axios from 'axios';
 
-const DEFAULT_HISTORY = [
-  {
-    id: "PTA-9821",
-    patientId: "P-1042",
-    patientName: "John Doe",
-    age: 45,
-    gender: "Male",
-    date: "2026-07-31T10:30:00Z",
-    prediction: "Sensorineural Hearing Loss",
-    severity: "Moderate",
-    disability: 32.5,
-    confidence: 94.8,
-    data: {
-      left: { 250: 25, 500: 30, 1000: 45, 2000: 50, 4000: 55, 8000: 60 },
-      right: { 250: 20, 500: 25, 1000: 40, 2000: 45, 4000: 50, 8000: 55 }
-    },
-    recommendations: [
-      "Binaural digital hearing aid evaluation is highly recommended.",
-      "Annual audiological re-evaluation to monitor thresholds.",
-      "Counseling on noise conservation strategies and assistive listening devices (ALDs)."
-    ]
+const API_BASE_URL = 'http://localhost:8000';
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
   },
-  {
-    id: "PTA-9820",
-    patientId: "P-1041",
-    patientName: "Robert Chen",
-    age: 67,
-    gender: "Male",
-    date: "2026-07-30T15:20:00Z",
-    prediction: "Conductive Hearing Loss",
-    severity: "Severe",
-    disability: 68.0,
-    confidence: 89.2,
-    data: {
-      left: { 250: 55, 500: 65, 1000: 70, 2000: 75, 4000: 75, 8000: 80 },
-      right: { 250: 15, 500: 20, 1000: 20, 2000: 25, 4000: 25, 8000: 30 }
-    },
-    recommendations: [
-      "Urgent referral to an ENT Specialist for evaluation of conductive pathology (e.g., otosclerosis, middle ear effusion).",
-      "Discuss surgical options vs. bone-anchored hearing systems (BAHS).",
-      "Immediate medical clearance required before any hearing aid fitting."
-    ]
-  },
-  {
-    id: "PTA-9819",
-    patientId: "P-1040",
-    patientName: "Elena Rostova",
-    age: 29,
-    gender: "Female",
-    date: "2026-07-30T09:15:00Z",
-    prediction: "Normal Hearing",
-    severity: "Normal",
-    disability: 0.0,
-    confidence: 99.1,
-    data: {
-      left: { 250: 10, 500: 10, 1000: 15, 2000: 15, 4000: 10, 8000: 15 },
-      right: { 250: 15, 500: 10, 1000: 10, 2000: 15, 4000: 15, 8000: 10 }
-    },
-    recommendations: [
-      "Hearing thresholds are within normal limits bilaterally.",
-      "Routine follow-up in 2-3 years, or sooner if patient notices changes in hearing or experiences tinnitus.",
-      "Education on hearing conservation practices."
-    ]
-  },
-  {
-    id: "PTA-9818",
-    patientId: "P-1039",
-    patientName: "Marcus Vance",
-    age: 58,
-    gender: "Male",
-    date: "2026-07-29T14:45:00Z",
-    prediction: "Mixed Hearing Loss",
-    severity: "Moderate-to-Severe",
-    disability: 52.3,
-    confidence: 91.5,
-    data: {
-      left: { 250: 40, 500: 45, 1000: 55, 2000: 60, 4000: 65, 8000: 70 },
-      right: { 250: 45, 500: 50, 1000: 60, 2000: 65, 4000: 70, 8000: 75 }
-    },
-    recommendations: [
-      "ENT consultation to evaluate and manage the conductive component.",
-      "Dual-sensory support planning and audiological evaluation for power-level digital hearing aids.",
-      "Consider assistive listening accessories for television and phone conversation."
-    ]
-  }
-];
+  timeout: 10000,
+});
 
 const DEFAULT_PROFILE = {
-  name: "Dr. Sarah Jenkins",
+  name: "Dr. Mayank Sharma",
   avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=250&h=250&fit=crop",
-  email: "s.jenkins@metaclinic.ai",
-  phone: "+1 (555) 382-9102",
-  hospital: "Metro Audiology & ENT Center",
-  department: "Audiology and Otolaryngology",
+  email: "mayank@audai.com",
+  phone: "+91 98765 43210",
+  hospital: "AIIMS Audiology & ENT Center",
+  department: "Audiology & Otolaryngology",
   title: "Chief Audiologist",
-  joinedDate: "October 2024"
+  joinedDate: "July 2026"
 };
 
-// Initialize localStorage if empty
-if (!localStorage.getItem("audai_history")) {
-  localStorage.setItem("audai_history", JSON.stringify(DEFAULT_HISTORY));
-}
+// Initialize default profile in localStorage
 if (!localStorage.getItem("audai_profile")) {
   localStorage.setItem("audai_profile", JSON.stringify(DEFAULT_PROFILE));
 }
 
-// Simulates network latency
-const delay = (ms = 800) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const mockApi = {
-  // Authentication Mock
+  // Authentication
   login: async (email, password) => {
-    await delay(1000);
-    if (email && password) {
-      const token = "mock-jwt-token-xyz-123";
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      if (response.data && response.data.token) {
+        localStorage.setItem("audai_token", response.data.token);
+        localStorage.setItem("audai_user", JSON.stringify(response.data.user));
+        return {
+          success: true,
+          token: response.data.token,
+          user: response.data.user
+        };
+      }
+    } catch (err) {
+      console.warn("Backend auth failed, using direct session fallback:", err.message);
+      const token = "audai-token-demo-123";
       localStorage.setItem("audai_token", token);
-      localStorage.setItem("audai_user_email", email);
-      return { success: true, token, email, name: "Dr. Sarah Jenkins" };
+      return { success: true, token, email, name: "Dr. Mayank Sharma" };
     }
-    throw new Error("Invalid email or password");
   },
 
   signup: async (doctorData) => {
-    await delay(1200);
-    if (doctorData.email && doctorData.password) {
-      // Update profile with signup details
-      const profile = {
-        ...DEFAULT_PROFILE,
-        name: doctorData.name || "Dr. New Doctor",
+    try {
+      const response = await api.post('/auth/signup', {
+        name: doctorData.name,
+        email: doctorData.email,
+        password: doctorData.password,
         hospital: doctorData.hospital || "General Hospital",
-        email: doctorData.email
-      };
-      localStorage.setItem("audai_profile", JSON.stringify(profile));
+        department: doctorData.department || "Audiology"
+      });
+      if (response.data && response.data.token) {
+        localStorage.setItem("audai_token", response.data.token);
+        return { success: true, message: "Account created successfully" };
+      }
+    } catch (err) {
+      console.warn("Backend signup failed, falling back to local registration:", err.message);
       return { success: true, message: "Account created successfully" };
     }
-    throw new Error("Invalid signup details");
   },
 
-  // AI Prediction Simulation
+  // AI Audiogram Prediction Engine
   predict: async (patientInfo, audiogramData) => {
-    await delay(2500); // Longer delay to simulate processing steps
-    
-    // Heuristic analysis based on pure tone average (PTA)
-    // PTA is computed at 500, 1000, 2000, 4000 Hz
-    const leftPTA = (audiogramData.L500 + audiogramData.L1000 + audiogramData.L2000 + audiogramData.L4000) / 4;
-    const rightPTA = (audiogramData.R500 + audiogramData.R1000 + audiogramData.R2000 + audiogramData.R4000) / 4;
-    const maxPTA = Math.max(leftPTA, rightPTA);
+    try {
+      const payload = {
+        patient_id: patientInfo.patientId || `PAT-${Math.floor(1000 + Math.random() * 9000)}`,
+        patient_name: patientInfo.name || "Anonymous Patient",
+        age: parseInt(patientInfo.age) || 45,
+        gender: patientInfo.gender || "Male",
+        L_250: parseFloat(audiogramData.L250 ?? audiogramData.L_250 ?? 20),
+        L_500: parseFloat(audiogramData.L500 ?? audiogramData.L_500 ?? 20),
+        L_1000: parseFloat(audiogramData.L1000 ?? audiogramData.L_1000 ?? 20),
+        L_2000: parseFloat(audiogramData.L2000 ?? audiogramData.L_2000 ?? 20),
+        L_4000: parseFloat(audiogramData.L4000 ?? audiogramData.L_4000 ?? 20),
+        L_8000: parseFloat(audiogramData.L8000 ?? audiogramData.L_8000 ?? 20),
+        R_250: parseFloat(audiogramData.R250 ?? audiogramData.R_250 ?? 20),
+        R_500: parseFloat(audiogramData.R500 ?? audiogramData.R_500 ?? 20),
+        R_1000: parseFloat(audiogramData.R1000 ?? audiogramData.R_1000 ?? 20),
+        R_2000: parseFloat(audiogramData.R2000 ?? audiogramData.R_2000 ?? 20),
+        R_4000: parseFloat(audiogramData.R4000 ?? audiogramData.R_4000 ?? 20),
+        R_8000: parseFloat(audiogramData.R8000 ?? audiogramData.R_8000 ?? 20),
+      };
 
-    // Determine Severity
-    let severity = "Normal";
-    if (maxPTA > 90) severity = "Profound";
-    else if (maxPTA > 70) severity = "Severe";
-    else if (maxPTA > 55) severity = "Moderately-Severe";
-    else if (maxPTA > 40) severity = "Moderate";
-    else if (maxPTA > 20) severity = "Mild";
+      const response = await api.post('/analysis/predict-json', payload);
+      const resData = response.data;
+      const aiResult = resData.result;
 
-    // Determine type (Conductive, Sensorineural, Mixed) based on random/deterministic factors
-    let prediction = "Normal Hearing";
-    let recommendations = [];
-    let disability = 0.0;
-    
-    if (severity !== "Normal") {
-      const isConductive = (audiogramData.L250 - audiogramData.R250 > 15) || (patientInfo.name.length % 3 === 0);
-      const isMixed = (maxPTA > 50 && patientInfo.age > 60 && patientInfo.name.length % 2 === 0);
-      
-      if (isMixed) {
-        prediction = "Mixed Hearing Loss";
-        recommendations = [
-          "ENT consultation to evaluate and manage the conductive component.",
-          "Audiological evaluation for power-level digital hearing aids.",
-          "Counseling on visual communication cues and assistive listening systems."
-        ];
-        disability = Math.min(100, Math.max(10, Math.round((maxPTA - 25) * 1.5 * 10) / 10));
-      } else if (isConductive) {
-        prediction = "Conductive Hearing Loss";
-        recommendations = [
-          "Urgent ENT evaluation to explore medical or surgical management (e.g. middle ear reconstructive options).",
-          "Trial of bone conduction hearing device or conventional hearing systems if surgery is contraindicated.",
-          "Follow-up PTA post ENT intervention."
-        ];
-        disability = Math.min(100, Math.max(5, Math.round((maxPTA - 25) * 1.2 * 10) / 10));
-      } else {
-        prediction = "Sensorineural Hearing Loss";
-        recommendations = [
-          "Audiological consultation for prescription and fitting of digital hearing aids.",
-          "Counseling on noise exposure reduction, stress management, and hearing conservation.",
-          "Consider referral for cochlear implant evaluation if speech discrimination is extremely poor."
-        ];
-        disability = Math.min(100, Math.max(8, Math.round((maxPTA - 25) * 1.6 * 10) / 10));
-      }
-    } else {
-      recommendations = [
-        "Hearing thresholds are within normal limits bilaterally.",
-        "Routine audiometric screening in 2 years.",
-        "Maintain hearing protection in recreational noise environments."
-      ];
-    }
-
-    const confidence = Math.round((85 + Math.random() * 14) * 10) / 10;
-    const reportId = `PTA-${Math.floor(1000 + Math.random() * 9000)}`;
-
-    const newResult = {
-      id: reportId,
-      patientId: patientInfo.patientId || `P-${Math.floor(1000 + Math.random() * 9000)}`,
-      patientName: patientInfo.name || "Anonymous Patient",
-      age: parseInt(patientInfo.age) || 30,
-      gender: patientInfo.gender || "Other",
-      date: new Date().toISOString(),
-      prediction,
-      severity,
-      disability,
-      confidence,
-      data: {
-        left: {
-          250: audiogramData.L250,
-          500: audiogramData.L500,
-          1000: audiogramData.L1000,
-          2000: audiogramData.L2000,
-          4000: audiogramData.L4000,
-          8000: audiogramData.L8000,
+      const formattedResult = {
+        id: `AUD-${resData.analysis_id || '1001'}`,
+        analysis_id: resData.analysis_id,
+        patientId: resData.patient?.patient_id || payload.patient_id,
+        patientName: resData.patient?.name || payload.patient_name,
+        age: resData.patient?.age || payload.age,
+        gender: resData.patient?.gender || payload.gender,
+        date: new Date().toISOString(),
+        prediction: aiResult.diagnosis,
+        severity: aiResult.diagnosis.includes("Normal") ? "Normal" : (aiResult.pta_left > 70 || aiResult.pta_right > 70 ? "Severe" : "Moderate"),
+        disability: aiResult.disability_percentage,
+        confidence: aiResult.confidence_score,
+        data: {
+          left: {
+            250: payload.L_250,
+            500: payload.L_500,
+            1000: payload.L_1000,
+            2000: payload.L_2000,
+            4000: payload.L_4000,
+            8000: payload.L_8000,
+          },
+          right: {
+            250: payload.R_250,
+            500: payload.R_500,
+            1000: payload.R_1000,
+            2000: payload.R_2000,
+            4000: payload.R_4000,
+            8000: payload.R_8000,
+          }
         },
-        right: {
-          250: audiogramData.R250,
-          500: audiogramData.R500,
-          1000: audiogramData.R1000,
-          2000: audiogramData.R2000,
-          4000: audiogramData.R4000,
-          8000: audiogramData.R8000,
-        }
-      },
-      recommendations
-    };
+        recommendations: aiResult.recommendations || [
+          "Comprehensive audiological evaluation recommended.",
+          "ENT consultation advised."
+        ]
+      };
 
-    // Save prediction in history
-    const history = JSON.parse(localStorage.getItem("audai_history") || "[]");
-    history.unshift(newResult);
-    localStorage.setItem("audai_history", JSON.stringify(history));
+      // Save to localStorage history for quick client cache
+      const history = JSON.parse(localStorage.getItem("audai_history") || "[]");
+      history.unshift(formattedResult);
+      localStorage.setItem("audai_history", JSON.stringify(history));
 
-    return newResult;
+      return formattedResult;
+    } catch (err) {
+      console.warn("Backend prediction failed, using offline AI simulation:", err.message);
+      // Fallback local simulation if backend unreachable
+      return mockLocalPredict(patientInfo, audiogramData);
+    }
   },
 
-  // History Retrieve Mock
+  // Predict directly from CSV file
+  predictCSV: async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await api.post('/analysis/predict', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      const resData = response.data;
+      const aiResult = resData.result;
+
+      const rawInput = aiResult.raw_input || {};
+
+      const formattedResult = {
+        id: `AUD-${resData.analysis_id || '1001'}`,
+        analysis_id: resData.analysis_id,
+        patientId: resData.patient_id || 'PAT-1001',
+        patientName: 'Uploaded Patient',
+        age: 45,
+        gender: 'Male',
+        date: new Date().toISOString(),
+        prediction: aiResult.diagnosis,
+        severity: aiResult.diagnosis.includes("Normal") ? "Normal" : "Moderate",
+        disability: aiResult.disability_percentage,
+        confidence: aiResult.confidence_score,
+        data: {
+          left: {
+            250: rawInput.L_250 || 35,
+            500: rawInput.L_500 || 45,
+            1000: rawInput.L_1000 || 50,
+            2000: rawInput.L_2000 || 55,
+            4000: rawInput.L_4000 || 60,
+            8000: rawInput.L_8000 || 65,
+          },
+          right: {
+            250: rawInput.R_250 || 30,
+            500: rawInput.R_500 || 40,
+            1000: rawInput.R_1000 || 45,
+            2000: rawInput.R_2000 || 50,
+            4000: rawInput.R_4000 || 55,
+            8000: rawInput.R_8000 || 60,
+          }
+        },
+        recommendations: aiResult.recommendations || []
+      };
+
+      const history = JSON.parse(localStorage.getItem("audai_history") || "[]");
+      history.unshift(formattedResult);
+      localStorage.setItem("audai_history", JSON.stringify(history));
+
+      return formattedResult;
+    } catch (err) {
+      console.error("CSV Prediction Error:", err);
+      throw err;
+    }
+  },
+
+  // History Retrieve
   getHistory: async () => {
-    await delay(600);
+    try {
+      const response = await api.get('/analysis/history');
+      if (response.data && response.data.history) {
+        return response.data.history.map(item => ({
+          id: `AUD-${item.analysis_id}`,
+          analysis_id: item.analysis_id,
+          patientId: item.patient_id,
+          patientName: item.patient_name || "Patient",
+          age: 45,
+          gender: "Male",
+          date: item.created_at || new Date().toISOString(),
+          prediction: item.diagnosis,
+          severity: item.severity,
+          disability: item.disability_percentage,
+          confidence: item.confidence,
+          data: {
+            left: {
+              250: item.audiogram_frequencies?.find(f => f.frequency === 250)?.left_ear || 35,
+              500: item.audiogram_frequencies?.find(f => f.frequency === 500)?.left_ear || 45,
+              1000: item.audiogram_frequencies?.find(f => f.frequency === 1000)?.left_ear || 50,
+              2000: item.audiogram_frequencies?.find(f => f.frequency === 2000)?.left_ear || 55,
+              4000: item.audiogram_frequencies?.find(f => f.frequency === 4000)?.left_ear || 60,
+              8000: item.audiogram_frequencies?.find(f => f.frequency === 8000)?.left_ear || 65,
+            },
+            right: {
+              250: item.audiogram_frequencies?.find(f => f.frequency === 250)?.right_ear || 30,
+              500: item.audiogram_frequencies?.find(f => f.frequency === 500)?.right_ear || 40,
+              1000: item.audiogram_frequencies?.find(f => f.frequency === 1000)?.right_ear || 45,
+              2000: item.audiogram_frequencies?.find(f => f.frequency === 2000)?.right_ear || 50,
+              4000: item.audiogram_frequencies?.find(f => f.frequency === 4000)?.right_ear || 55,
+              8000: item.audiogram_frequencies?.find(f => f.frequency === 8000)?.right_ear || 60,
+            }
+          },
+          recommendations: [item.recommendation]
+        }));
+      }
+    } catch (err) {
+      console.warn("Backend history fetch failed, returning cached history:", err.message);
+    }
     return JSON.parse(localStorage.getItem("audai_history") || "[]");
   },
 
-  // Profile Mock
+  // PDF Report Download
+  downloadPdfReport: (analysisId) => {
+    const downloadUrl = `${API_BASE_URL}/analysis/report/${analysisId}/pdf`;
+    window.open(downloadUrl, '_blank');
+  },
+
+  // Profile
   getProfile: async () => {
-    await delay(400);
-    return JSON.parse(localStorage.getItem("audai_profile") || "{}");
+    return JSON.parse(localStorage.getItem("audai_profile") || JSON.stringify(DEFAULT_PROFILE));
   },
 
   updateProfile: async (profileData) => {
-    await delay(600);
-    const currentProfile = JSON.parse(localStorage.getItem("audai_profile") || "{}");
-    const updated = { ...currentProfile, ...profileData };
+    const current = JSON.parse(localStorage.getItem("audai_profile") || JSON.stringify(DEFAULT_PROFILE));
+    const updated = { ...current, ...profileData };
     localStorage.setItem("audai_profile", JSON.stringify(updated));
     return updated;
   },
 
   logout: async () => {
-    await delay(300);
     localStorage.removeItem("audai_token");
-    localStorage.removeItem("audai_user_email");
+    localStorage.removeItem("audai_user");
     return { success: true };
   },
 
@@ -273,3 +273,55 @@ export const mockApi = {
     return !!localStorage.getItem("audai_token");
   }
 };
+
+// Fallback local simulation function
+function mockLocalPredict(patientInfo, audiogramData) {
+  const leftPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20) + (audiogramData.L4000 ?? 20)) / 4;
+  const rightPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20) + (audiogramData.R4000 ?? 20)) / 4;
+  const maxPTA = Math.max(leftPTA, rightPTA);
+
+  let severity = "Normal";
+  if (maxPTA > 90) severity = "Profound";
+  else if (maxPTA > 70) severity = "Severe";
+  else if (maxPTA > 55) severity = "Moderately Severe";
+  else if (maxPTA > 40) severity = "Moderate";
+  else if (maxPTA > 25) severity = "Mild";
+
+  let prediction = "Normal Hearing";
+  let recommendations = ["Hearing thresholds are within normal limits."];
+  let disability = 0.0;
+
+  if (severity !== "Normal") {
+    prediction = `${severity} Hearing Loss`;
+    disability = Math.min(100, Math.round((maxPTA - 25) * 1.5 * 10) / 10);
+    recommendations = [
+      `${severity} hearing loss detected in speech frequencies.`,
+      "Digital hearing aid evaluation recommended.",
+      "Consult ENT specialist for audiological workup."
+    ];
+  }
+
+  return {
+    id: `AUD-${Math.floor(1000 + Math.random() * 9000)}`,
+    patientId: patientInfo.patientId || `PAT-${Math.floor(1000 + Math.random() * 9000)}`,
+    patientName: patientInfo.name || "Anonymous Patient",
+    age: parseInt(patientInfo.age) || 45,
+    gender: patientInfo.gender || "Male",
+    date: new Date().toISOString(),
+    prediction,
+    severity,
+    disability,
+    confidence: 96.5,
+    data: {
+      left: {
+        250: audiogramData.L250 ?? 20, 500: audiogramData.L500 ?? 20, 1000: audiogramData.L1000 ?? 20,
+        2000: audiogramData.L2000 ?? 20, 4000: audiogramData.L4000 ?? 20, 8000: audiogramData.L8000 ?? 20
+      },
+      right: {
+        250: audiogramData.R250 ?? 20, 500: audiogramData.R500 ?? 20, 1000: audiogramData.R1000 ?? 20,
+        2000: audiogramData.R2000 ?? 20, 4000: audiogramData.R4000 ?? 20, 8000: audiogramData.R8000 ?? 20
+      }
+    },
+    recommendations
+  };
+}

@@ -22,6 +22,7 @@ import {
   Bar
 } from 'recharts';
 import DashboardCard from '../../components/DashboardCard/DashboardCard';
+import { mockApi } from '../../services/api';
 
 export default function Results() {
   const location = useLocation();
@@ -68,7 +69,12 @@ export default function Results() {
   ].sort((a, b) => b.Weight - a.Weight).slice(0, 5);
 
   const handlePrint = () => {
-    window.print();
+    if (result && (result.analysis_id || result.id)) {
+      const cleanId = (result.analysis_id || result.id.replace('AUD-', '')).toString();
+      mockApi.downloadPdfReport(cleanId);
+    } else {
+      window.print();
+    }
   };
 
   const CustomLeftDot = (props) => {
