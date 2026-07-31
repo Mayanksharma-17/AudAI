@@ -7,10 +7,31 @@ import {
   ShieldCheck, 
   Activity,
   CheckCircle,
-  Save
+  Save,
+  Camera,
+  Award,
+  FileCheck,
+  Sliders,
+  Check
 } from 'lucide-react';
 import { mockApi } from '../../services/api';
 import DashboardCard from '../../components/DashboardCard/DashboardCard';
+
+const AVATAR_PRESETS = [
+  "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=250&h=250&fit=crop",
+  "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=250&h=250&fit=crop",
+  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=250&h=250&fit=crop",
+  "https://images.unsplash.com/photo-1594824813566-78853b70868f?q=80&w=250&h=250&fit=crop"
+];
+
+const SPECIALIZATION_TAGS = [
+  "Pure Tone Audiometry (PTA)",
+  "Speech Audiometry",
+  "Cochlear Implant Fitting",
+  "Hearing Loss Disability Calculation",
+  "ENT Surgical Evaluation",
+  "Pediatric Hearing Rehabilitation"
+];
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -20,11 +41,18 @@ export default function Profile() {
     phone: '',
     hospital: '',
     department: '',
-    title: ''
+    title: '',
+    licenseNumber: '',
+    avatar: '',
+    reportTitle: '',
+    disabilityStandard: 'WHO',
+    specializations: []
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('profile'); // 'profile', 'credentials', 'preferences'
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -32,15 +60,20 @@ export default function Profile() {
         const data = await mockApi.getProfile();
         setProfile(data);
         setFormData({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          hospital: data.hospital,
-          department: data.department,
-          title: data.title
+          name: data.name || 'Dr. Mayank Sharma',
+          email: data.email || 'mayank@audai.com',
+          phone: data.phone || '+91 98765 43210',
+          hospital: data.hospital || 'AIIMS Audiology & ENT Center',
+          department: data.department || 'Audiology & Otolaryngology',
+          title: data.title || 'Chief Audiologist & ENT Specialist',
+          licenseNumber: data.licenseNumber || 'RCI-AUD-2026-9042',
+          avatar: data.avatar || AVATAR_PRESETS[0],
+          reportTitle: data.reportTitle || 'AudAI Pure Tone Audiometry Diagnostic Report',
+          disabilityStandard: data.disabilityStandard || 'WHO',
+          specializations: data.specializations || [SPECIALIZATION_TAGS[0], SPECIALIZATION_TAGS[3]]
         });
       } catch (err) {
-        console.error("Failed to load doctor profile", err);
+        console.error("Failed to load clinician profile", err);
       } finally {
         setIsLoading(false);
       }
@@ -55,13 +88,23 @@ export default function Profile() {
     try {
       const updated = await mockApi.updateProfile(formData);
       setProfile(updated);
-      setSuccessMessage('Clinical profile updated successfully.');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      setSuccessMessage('Clinician profile and report preferences saved successfully.');
+      setTimeout(() => setSuccessMessage(''), 3500);
     } catch (err) {
       console.error(err);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const toggleSpecialization = (tag) => {
+    setFormData(prev => {
+      const exists = prev.specializations.includes(tag);
+      const updated = exists 
+        ? prev.specializations.filter(t => t !== tag)
+        : [...prev.specializations, tag];
+      return { ...prev, specializations: updated };
+    });
   };
 
   if (isLoading) {
@@ -73,144 +116,308 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       
-      <div>
-        <h2 className="text-3xl font-extrabold font-heading text-slate-800 dark:text-slate-100 tracking-tight">
-          Clinician Profile
-        </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Review credentials and manage hospital workspace identities.
-        </p>
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-extrabold font-heading text-slate-800 dark:text-slate-100 tracking-tight">
+            Clinician Profile & Preferences
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Customize your doctor profile, avatar, medical license, and PDF report branding.
+          </p>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200/50 dark:border-slate-800">
+          <button
+            onClick={() => setActiveTab('profile')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              activeTab === 'profile'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            Personal Info
+          </button>
+          <button
+            onClick={() => setActiveTab('credentials')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              activeTab === 'credentials'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            Credentials & Badges
+          </button>
+          <button
+            onClick={() => setActiveTab('preferences')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              activeTab === 'preferences'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            PDF Branding
+          </button>
+        </div>
       </div>
 
       {successMessage && (
-        <div className="p-4 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-sm rounded-xl border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-2">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-sm rounded-xl border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-2 shadow-sm"
+        >
           <CheckCircle className="h-5 w-5 shrink-0" />
-          <span>{successMessage}</span>
-        </div>
+          <span className="font-semibold">{successMessage}</span>
+        </motion.div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        {/* Profile Details */}
+        {/* Profile Card & Avatar Customizer */}
         <div className="md:col-span-1 space-y-6">
           <DashboardCard className="text-center">
             <div className="flex flex-col items-center">
-              <img
-                src={profile?.avatar}
-                alt={profile?.name}
-                className="h-24 w-24 rounded-2xl object-cover border-2 border-slate-100 dark:border-slate-800 shadow-sm"
-              />
+              <div className="relative group">
+                <img
+                  src={formData.avatar}
+                  alt={formData.name}
+                  className="h-28 w-28 rounded-2xl object-cover border-2 border-primary-500/40 dark:border-primary-400/40 shadow-md transition-transform group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-slate-950/40 rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+                  <Camera className="h-6 w-6 text-white" />
+                </div>
+              </div>
+
               <h3 className="text-lg font-bold font-heading text-slate-800 dark:text-slate-200 mt-4 leading-none">
-                {profile?.name}
+                {formData.name}
               </h3>
-              <p className="text-xs text-slate-400 font-semibold mt-1.5">{profile?.title}</p>
+              <p className="text-xs text-primary-600 dark:text-primary-400 font-bold mt-1.5">{formData.title}</p>
               
-              <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border border-primary-200/10">
+              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200/20">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                Verified Audiologist
+                License: {formData.licenseNumber}
               </div>
             </div>
 
-            <div className="mt-8 border-t border-slate-100 dark:border-slate-800/80 pt-6 text-left space-y-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            {/* Avatar Selector */}
+            <div className="mt-6 border-t border-slate-100 dark:border-slate-800/80 pt-4 text-left">
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                Choose Avatar Preset
+              </label>
+              <div className="flex items-center gap-2 justify-center">
+                {AVATAR_PRESETS.map((preset, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, avatar: preset })}
+                    className={`h-10 w-10 rounded-xl overflow-hidden border-2 transition-transform hover:scale-110 ${
+                      formData.avatar === preset ? 'border-primary-500 ring-2 ring-primary-500/30' : 'border-transparent opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={preset} alt="preset" className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Info */}
+            <div className="mt-6 border-t border-slate-100 dark:border-slate-800/80 pt-4 text-left space-y-3 text-xs font-semibold text-slate-500 dark:text-slate-400">
               <div className="flex items-center gap-2.5">
                 <Hospital className="h-4 w-4 text-slate-400 shrink-0" />
-                <span className="truncate">{profile?.hospital}</span>
+                <span className="truncate">{formData.hospital}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="h-4 w-4 text-slate-400 shrink-0" />
-                <span className="truncate">{profile?.email}</span>
+                <span className="truncate">{formData.email}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 text-slate-400 shrink-0" />
-                <span>{profile?.phone}</span>
+                <span>{formData.phone}</span>
               </div>
             </div>
           </DashboardCard>
         </div>
 
-        {/* Profile Form */}
+        {/* Main Editable Form */}
         <div className="md:col-span-2">
-          <DashboardCard title="Edit Clinic Credentials" subtitle="Ensure details align with state audiology boards.">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Clinical Title</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
-                  />
-                </div>
-              </div>
+          <DashboardCard 
+            title={
+              activeTab === 'profile' ? "Edit Personal Details" :
+              activeTab === 'credentials' ? "Clinical Credentials & Badges" :
+              "PDF Report Branding & Settings"
+            } 
+            subtitle="Customize how your profile and generated PDF reports appear to patients and colleagues."
+          >
+            <form onSubmit={handleSubmit} className="space-y-5">
+              
+              {/* TAB 1: PERSONAL PROFILE */}
+              {activeTab === 'profile' && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Full Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Clinical Designation</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      />
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Contact Phone</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
-                  />
-                </div>
-              </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                      <input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Contact Phone</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      />
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Hospital Facility</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.hospital}
-                    onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
-                    className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Hospital Facility</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.hospital}
+                        onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Clinical Department</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.department}
+                        onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Clinical Department</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
-                  />
-                </div>
-              </div>
+              )}
 
-              <div className="pt-2 flex justify-end">
+              {/* TAB 2: CREDENTIALS & SPECIALIZATIONS */}
+              {activeTab === 'credentials' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      Medical / Rehabilitation Council License No.
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.licenseNumber}
+                      onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
+                      placeholder="e.g. RCI-AUD-2026-9042"
+                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                      Clinical Specializations & Badges
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {SPECIALIZATION_TAGS.map((tag) => {
+                        const active = formData.specializations.includes(tag);
+                        return (
+                          <button
+                            type="button"
+                            key={tag}
+                            onClick={() => toggleSpecialization(tag)}
+                            className={`p-3 rounded-xl border text-left flex items-start gap-2.5 transition-all text-xs ${
+                              active
+                                ? 'border-primary-500 bg-primary-50/30 dark:bg-primary-950/20 text-primary-700 dark:text-primary-300 font-bold'
+                                : 'border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 text-slate-600 dark:text-slate-400'
+                            }`}
+                          >
+                            <div className={`h-4 w-4 rounded-md flex items-center justify-center shrink-0 mt-0.5 border ${
+                              active ? 'bg-primary-600 border-primary-600 text-white' : 'border-slate-300 dark:border-slate-700'
+                            }`}>
+                              {active && <Check className="h-3 w-3" />}
+                            </div>
+                            <span className="leading-tight">{tag}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: PDF REPORT PREFERENCES */}
+              {activeTab === 'preferences' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      Custom Report Title (Printed on PDF)
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.reportTitle}
+                      onChange={(e) => setFormData({ ...formData, reportTitle: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      Disability Calculation Guidelines Standard
+                    </label>
+                    <select
+                      value={formData.disabilityStandard}
+                      onChange={(e) => setFormData({ ...formData, disabilityStandard: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-semibold focus:outline-none"
+                    >
+                      <option value="WHO">WHO Standard Pure Tone Average (500, 1000, 2000, 4000 Hz)</option>
+                      <option value="MSJE">Ministry of Social Justice & Empowerment (Govt of India)</option>
+                      <option value="ANSI">ANSI S3.6 Clinical Standard</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex justify-end">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-bold rounded-xl shadow-md transition-all disabled:opacity-50 hover:scale-[1.02]"
+                  className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs rounded-xl shadow-md shadow-primary-500/20 transition-all disabled:opacity-50 hover:scale-[1.02]"
                 >
                   <Save className="h-4 w-4" />
-                  {isSubmitting ? 'Saving changes...' : 'Save Profile Details'}
+                  {isSubmitting ? 'Saving changes...' : 'Save Profile & Settings'}
                 </button>
               </div>
             </form>
