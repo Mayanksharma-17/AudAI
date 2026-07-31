@@ -100,45 +100,46 @@ export default function Upload() {
     const headers = lines[0].split(',').map(h => h.trim());
     const values = lines[1].split(',').map(v => v.trim());
 
-    const dataObj = {};
+    // Normalize keys (remove underscores, spaces, lowercase)
+    const normData = {};
     headers.forEach((header, index) => {
-      dataObj[header] = values[index];
+      const cleanKey = header.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      normData[cleanKey] = values[index];
     });
 
-    const requiredHeaders = [
-      'PatientID', 'PatientName', 'Age', 'Gender',
-      'L250', 'L500', 'L1000', 'L2000', 'L4000', 'L8000',
-      'R250', 'R500', 'R1000', 'R2000', 'R4000', 'R8000'
-    ];
+    const getVal = (...keys) => {
+      for (const k of keys) {
+        const cleanK = k.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        if (normData[cleanK] !== undefined) return normData[cleanK];
+      }
+      return undefined;
+    };
 
-    const missing = requiredHeaders.filter(h => !(h in dataObj));
-    if (missing.length > 0) {
-      throw new Error(`Missing columns: ${missing.join(', ')}`);
-    }
+    const patientId = getVal('PatientID', 'patient_id', 'id') || 'PAT-1001';
+    const name = getVal('PatientName', 'patient_name', 'name') || 'Anonymous Patient';
+    const age = getVal('Age', 'age') || '45';
+    const gender = getVal('Gender', 'gender') || 'Male';
+
+    const frequencies = ['250', '500', '1000', '2000', '4000', '8000'];
+    const audiogram = {};
+
+    frequencies.forEach(f => {
+      const lVal = getVal(`L${f}`, `L_${f}`, `left${f}`, `l${f}`);
+      const rVal = getVal(`R${f}`, `R_${f}`, `right${f}`, `r${f}`);
+      
+      audiogram[`L${f}`] = lVal !== undefined ? parseFloat(lVal) : 20;
+      audiogram[`R${f}`] = rVal !== undefined ? parseFloat(rVal) : 20;
+    });
 
     setPatientInfo({
-      patientId: dataObj.PatientID,
-      name: dataObj.PatientName,
-      age: dataObj.Age,
-      gender: dataObj.Gender
+      patientId,
+      name,
+      age,
+      gender
     });
 
-    setAudiogramData({
-      L250: parseInt(dataObj.L250) || 0,
-      L500: parseInt(dataObj.L500) || 0,
-      L1000: parseInt(dataObj.L1000) || 0,
-      L2000: parseInt(dataObj.L2000) || 0,
-      L4000: parseInt(dataObj.L4000) || 0,
-      L8000: parseInt(dataObj.L8000) || 0,
-      R250: parseInt(dataObj.R250) || 0,
-      R500: parseInt(dataObj.R500) || 0,
-      R1000: parseInt(dataObj.R1000) || 0,
-      R2000: parseInt(dataObj.R2000) || 0,
-      R4000: parseInt(dataObj.R4000) || 0,
-      R8000: parseInt(dataObj.R8000) || 0
-    });
-
-    setParsedData(dataObj);
+    setAudiogramData(audiogram);
+    setParsedData(normData);
   };
 
   const handleRemoveFile = () => {
