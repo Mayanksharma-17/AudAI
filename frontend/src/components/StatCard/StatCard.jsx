@@ -3,22 +3,22 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 
 export default function StatCard({ title, value, icon: Icon, description, trend, trendType = 'neutral' }) {
   return (
-    <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 rounded-2xl p-6 shadow-soft hover:shadow-premium hover:-translate-y-0.5 transition-all duration-300 flex items-start justify-between">
+    <div className="ios-glass-card rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-slate-300/80 dark:hover:border-slate-700/60 flex items-start justify-between relative overflow-hidden backdrop-blur-xl">
       <div className="space-y-3">
-        <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+        <span className="text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest font-heading">
           {title}
         </span>
         <div className="flex items-baseline space-x-2">
-          <span className="text-3xl font-extrabold font-heading text-slate-800 dark:text-slate-100 tracking-tight">
+          <span className="text-3xl lg:text-4xl font-extrabold font-heading text-slate-900 dark:text-white tracking-tight leading-none">
             {value}
           </span>
           {trend && (
-            <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-lg text-[10px] font-bold ${
+            <span className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${
               trendType === 'positive' 
-                ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400' 
+                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' 
                 : trendType === 'negative'
-                ? 'bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                : 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20'
             }`}>
               {trendType === 'positive' && <TrendingUp className="h-3 w-3" />}
               {trendType === 'negative' && <TrendingDown className="h-3 w-3" />}
@@ -27,15 +27,15 @@ export default function StatCard({ title, value, icon: Icon, description, trend,
           )}
         </div>
         {description && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
             {description}
           </p>
         )}
       </div>
       
       {Icon && (
-        <div className="h-10 w-10 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/30 dark:border-slate-800/40 text-slate-600 dark:text-slate-400 flex items-center justify-center shadow-sm">
-          <Icon className="h-5 w-5" />
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-primary-500/10 to-secondary-500/10 border border-primary-500/20 text-primary-600 dark:text-primary-400 flex items-center justify-center shadow-sm shrink-0 backdrop-blur-md">
+          <Icon className="h-6 w-6" />
         </div>
       )}
     </div>

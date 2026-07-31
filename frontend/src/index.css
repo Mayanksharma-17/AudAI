@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @import "tailwindcss";
 
@@ -6,7 +6,8 @@
 
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-heading: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
   
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
@@ -36,18 +37,38 @@
   /* Accent shadows and border radius custom */
   --radius-xl: 16px;
   --radius-2xl: 24px;
+  --radius-3xl: 32px;
 }
 
 /* Base custom styles & resets */
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-primary-100 dark:bg-slate-950 dark:text-slate-50;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-primary-500/20 dark:bg-slate-950 dark:text-slate-50;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading tracking-tight font-semibold;
+    @apply font-heading tracking-tight font-bold;
   }
+}
+
+/* Stunning Gradient Text Utilities */
+.gradient-text {
+  background: linear-gradient(135deg, #2563eb 0%, #0d9488 50%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .gradient-text {
+  background: linear-gradient(135deg, #60a5fa 0%, #2dd4bf 50%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-teal {
+  background: linear-gradient(135deg, #0d9488 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* iOS Glassmorphism Utilities */
@@ -66,7 +87,7 @@
 }
 
 .ios-glass-card {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(24px) saturate(190%);
   -webkit-backdrop-filter: blur(24px) saturate(190%);
   border: 1px solid rgba(255, 255, 255, 0.6);
@@ -82,7 +103,7 @@
 }
 
 .ios-glass-pill {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -95,7 +116,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Premium Soft Shadows */
+/* Premium Soft & Ambient Shadows */
 .shadow-soft {
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.015), 0px 1px 3px rgba(0, 0, 0, 0.01);
 }

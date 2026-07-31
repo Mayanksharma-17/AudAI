@@ -111,26 +111,30 @@ export default function Dashboard() {
       animate="show"
       className="space-y-8 max-w-7xl mx-auto"
     >
-      {/* Header Greeting */}
+      {/* Header Greeting Banner */}
       <motion.div 
         variants={itemVariants}
-        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900 text-white dark:bg-slate-900/50 p-6 md:p-8 rounded-2xl relative overflow-hidden"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ios-glass-card p-6 md:p-8 rounded-3xl relative overflow-hidden backdrop-blur-2xl border border-white/50 dark:border-slate-800/60 shadow-2xl"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary-600/25 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-indigo-500/10 pointer-events-none" />
         <div className="relative z-10 space-y-1">
-          <h2 className="text-2xl md:text-3xl font-extrabold font-heading tracking-tight">
-            Welcome back, {profile?.name || 'Dr. Sarah'}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 mb-1">
+            <Brain className="h-3.5 w-3.5 animate-pulse" />
+            AI Decision Support Active
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black font-heading tracking-tight text-slate-900 dark:text-white">
+            Welcome back, <span className="gradient-text">{profile?.name || 'Dr. Mayank'}</span>
           </h2>
-          <p className="text-slate-400 text-sm font-medium">
-            Clinical System Active &bull; {profile?.hospital || 'Metro Clinic'}
+          <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-medium">
+            Clinical Diagnostic System &bull; {profile?.hospital || 'AIIMS Audiology & ENT Center'}
           </p>
         </div>
         <Link 
           to="/upload" 
-          className="relative z-10 flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-950 font-bold text-sm transition-all shadow-md shadow-white/5 hover:scale-[1.02]"
+          className="relative z-10 flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-extrabold text-xs tracking-wide shadow-lg shadow-primary-500/25 hover:scale-[1.03] transition-all"
         >
           <Plus className="h-4 w-4" />
-          Analyze New PTA
+          Analyze New PTA CSV
         </Link>
       </motion.div>
 
