@@ -937,17 +937,16 @@ export default function Results() {
                       
                       {/* Air Conduction Lines */}
                       <Line 
-                        type="monotone" 
+                        type="linear" 
                         dataKey="Left" 
                         name="Left Ear AC (X)" 
                         stroke="#2563eb" 
                         strokeWidth={2.5} 
-                        strokeDasharray="5 5" 
                         dot={<CustomLeftDot />} 
                         activeDot={{ r: 6 }} 
                       />
                       <Line 
-                        type="monotone" 
+                        type="linear" 
                         dataKey="Right" 
                         name="Right Ear AC (O)" 
                         stroke="#e11d48" 
@@ -958,7 +957,7 @@ export default function Results() {
 
                       {/* Bone Conduction Lines */}
                       <Line 
-                        type="monotone" 
+                        type="linear" 
                         dataKey="Right_BC" 
                         name={isMaskedBC ? "Right Ear BC ([)" : "Right Ear BC (<)"} 
                         stroke="#d97706" 
@@ -968,7 +967,7 @@ export default function Results() {
                         dot={<CustomRightBCDot />} 
                       />
                       <Line 
-                        type="monotone" 
+                        type="linear" 
                         dataKey="Left_BC" 
                         name={isMaskedBC ? "Left Ear BC (])" : "Left Ear BC (>)"} 
                         stroke="#4f46e5" 
