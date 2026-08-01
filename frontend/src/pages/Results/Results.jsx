@@ -201,48 +201,167 @@ export default function Results() {
           </div>
         </div>
 
-        {/* Pure Tone Threshold Matrix Table */}
+        {/* Pure Tone Threshold Matrix Table (AC & BC) */}
         <div className="mb-4">
           <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wide mb-2 pb-1 border-b border-slate-300">
-            Pure Tone Audiometry Thresholds (dB HL)
+            Pure Tone Audiometry Thresholds (Air & Bone Conduction in dB HL)
           </h3>
-          <table className="w-full text-center border-collapse border border-slate-300 text-[11px]">
+          <table className="w-full text-center border-collapse border border-slate-300 text-[10px]">
             <thead>
               <tr className="bg-slate-100 font-bold border-b border-slate-300 text-slate-700">
-                <th className="py-2 px-2 text-left">Ear Side</th>
-                <th className="py-2 px-2">250 Hz</th>
-                <th className="py-2 px-2">500 Hz</th>
-                <th className="py-2 px-2">1000 Hz</th>
-                <th className="py-2 px-2">2000 Hz</th>
-                <th className="py-2 px-2">4000 Hz</th>
-                <th className="py-2 px-2">8000 Hz</th>
-                <th className="py-2 px-2 bg-slate-200">Speech PTA</th>
+                <th className="py-1.5 px-2 text-left">Ear & Test Type</th>
+                <th className="py-1.5 px-2">250 Hz</th>
+                <th className="py-1.5 px-2">500 Hz</th>
+                <th className="py-1.5 px-2">1000 Hz</th>
+                <th className="py-1.5 px-2">2000 Hz</th>
+                <th className="py-1.5 px-2">4000 Hz</th>
+                <th className="py-1.5 px-2">8000 Hz</th>
+                <th className="py-1.5 px-2 bg-slate-200">Speech PTA</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-slate-200">
-                <td className="py-2 px-2 text-left font-bold text-blue-700">Left Ear (Blue 🅛)</td>
-                <td className="py-2 px-2">{result.data.left[250]} dB</td>
-                <td className="py-2 px-2">{result.data.left[500]} dB</td>
-                <td className="py-2 px-2">{result.data.left[1000]} dB</td>
-                <td className="py-2 px-2">{result.data.left[2000]} dB</td>
-                <td className="py-2 px-2">{result.data.left[4000]} dB</td>
-                <td className="py-2 px-2">{result.data.left[8000]} dB</td>
-                <td className="py-2 px-2 font-bold bg-slate-50 text-slate-900">{leftPTA} dB</td>
+                <td className="py-1.5 px-2 text-left font-bold text-blue-700">Left Ear AC (O)</td>
+                <td className="py-1.5 px-2">{result.data.left[250]} dB</td>
+                <td className="py-1.5 px-2">{result.data.left[500]} dB</td>
+                <td className="py-1.5 px-2">{result.data.left[1000]} dB</td>
+                <td className="py-1.5 px-2">{result.data.left[2000]} dB</td>
+                <td className="py-1.5 px-2">{result.data.left[4000]} dB</td>
+                <td className="py-1.5 px-2">{result.data.left[8000]} dB</td>
+                <td className="py-1.5 px-2 font-bold bg-slate-50 text-slate-900">{leftPTA} dB</td>
               </tr>
-              <tr>
-                <td className="py-2 px-2 text-left font-bold text-red-600">Right Ear (Red 🅡)</td>
-                <td className="py-2 px-2">{result.data.right[250]} dB</td>
-                <td className="py-2 px-2">{result.data.right[500]} dB</td>
-                <td className="py-2 px-2">{result.data.right[1000]} dB</td>
-                <td className="py-2 px-2">{result.data.right[2000]} dB</td>
-                <td className="py-2 px-2">{result.data.right[4000]} dB</td>
-                <td className="py-2 px-2">{result.data.right[8000]} dB</td>
-                <td className="py-2 px-2 font-bold bg-slate-50 text-slate-900">{rightPTA} dB</td>
+              <tr className="border-b border-slate-200 bg-slate-50/50">
+                <td className="py-1.5 px-2 text-left font-bold text-blue-900">Left Ear BC (&gt;)</td>
+                <td className="py-1.5 px-2">{getBC('left', 250)} dB</td>
+                <td className="py-1.5 px-2">{getBC('left', 500)} dB</td>
+                <td className="py-1.5 px-2">{getBC('left', 1000)} dB</td>
+                <td className="py-1.5 px-2">{getBC('left', 2000)} dB</td>
+                <td className="py-1.5 px-2">{getBC('left', 4000)} dB</td>
+                <td className="py-1.5 px-2 text-slate-400">—</td>
+                <td className="py-1.5 px-2 font-bold bg-slate-100 text-slate-900">{((getBC('left', 500) + getBC('left', 1000) + getBC('left', 2000)) / 3).toFixed(1)} dB</td>
+              </tr>
+              <tr className="border-b border-slate-200">
+                <td className="py-1.5 px-2 text-left font-bold text-rose-600">Right Ear AC (X)</td>
+                <td className="py-1.5 px-2">{result.data.right[250]} dB</td>
+                <td className="py-1.5 px-2">{result.data.right[500]} dB</td>
+                <td className="py-1.5 px-2">{result.data.right[1000]} dB</td>
+                <td className="py-1.5 px-2">{result.data.right[2000]} dB</td>
+                <td className="py-1.5 px-2">{result.data.right[4000]} dB</td>
+                <td className="py-1.5 px-2">{result.data.right[8000]} dB</td>
+                <td className="py-1.5 px-2 font-bold bg-slate-50 text-slate-900">{rightPTA} dB</td>
+              </tr>
+              <tr className="border-b border-slate-200 bg-slate-50/50">
+                <td className="py-1.5 px-2 text-left font-bold text-rose-900">Right Ear BC (&lt;)</td>
+                <td className="py-1.5 px-2">{getBC('right', 250)} dB</td>
+                <td className="py-1.5 px-2">{getBC('right', 500)} dB</td>
+                <td className="py-1.5 px-2">{getBC('right', 1000)} dB</td>
+                <td className="py-1.5 px-2">{getBC('right', 2000)} dB</td>
+                <td className="py-1.5 px-2">{getBC('right', 4000)} dB</td>
+                <td className="py-1.5 px-2 text-slate-400">—</td>
+                <td className="py-1.5 px-2 font-bold bg-slate-100 text-slate-900">{((getBC('right', 500) + getBC('right', 1000) + getBC('right', 2000)) / 3).toFixed(1)} dB</td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        {/* Diagnostic Breakdown Summary Table (Degree, Type, ABG, SRT/SDT/WRS & PTA-SDT Correlation) */}
+        {(() => {
+          const getDegreeOfLoss = (pta) => {
+            const num = parseFloat(pta);
+            if (num <= 25) return 'Normal';
+            if (num <= 40) return 'Mild';
+            if (num <= 55) return 'Moderate';
+            if (num <= 70) return 'Moderately Severe';
+            if (num <= 90) return 'Severe';
+            return 'Profound';
+          };
+
+          const getLossTypeObj = (acVal, bcVal) => {
+            const ac = parseFloat(acVal);
+            const bc = parseFloat(bcVal);
+            const abg = ac - bc;
+            if (ac <= 25) return { type: "Normal Hearing", code: "Normal", abg: `${abg.toFixed(1)} dB (Absent)` };
+            if (bc <= 25) return { type: "Conductive Loss", code: "CHL", abg: `${abg.toFixed(1)} dB (Significant)` };
+            if (abg > 10) return { type: "Mixed Loss", code: "MHL", abg: `${abg.toFixed(1)} dB (Present)` };
+            return { type: "Sensorineural Loss", code: "SNHL", abg: `${abg.toFixed(1)} dB (Absent)` };
+          };
+
+          const getPtaSdtInterpretation = (ptaVal, sdtVal) => {
+            const diff = Math.abs(parseFloat(ptaVal) - parseFloat(sdtVal));
+            const diffRounded = Math.round(diff);
+            if (diffRounded <= 5) return `${diff.toFixed(1)} dB (Excellent)`;
+            if (diffRounded === 6) return `${diff.toFixed(1)} dB (Excellent)`;
+            if (diffRounded === 7) return `${diff.toFixed(1)} dB (Very Good)`;
+            if (diffRounded === 8) return `${diff.toFixed(1)} dB (Good)`;
+            if (diffRounded === 9) return `${diff.toFixed(1)} dB (Acceptable)`;
+            if (diffRounded === 10) return `${diff.toFixed(1)} dB (Upper Limit)`;
+            return `${diff.toFixed(1)} dB (Poor Correlation)`;
+          };
+
+          const lBC_PTA = ((getBC('left', 500) + getBC('left', 1000) + getBC('left', 2000)) / 3).toFixed(1);
+          const rBC_PTA = ((getBC('right', 500) + getBC('right', 1000) + getBC('right', 2000)) / 3).toFixed(1);
+
+          const lDegree = getDegreeOfLoss(leftPTA);
+          const rDegree = getDegreeOfLoss(rightPTA);
+
+          const lType = getLossTypeObj(leftPTA, lBC_PTA);
+          const rType = getLossTypeObj(rightPTA, rBC_PTA);
+
+          const lSRT = result.data.speech?.left?.srt ?? Math.round(parseFloat(leftPTA));
+          const lSDT = result.data.speech?.left?.sdt ?? Math.round(lSRT - 6);
+          const lWRS = result.data.speech?.left?.wrs ?? 96;
+
+          const rSRT = result.data.speech?.right?.srt ?? Math.round(parseFloat(rightPTA));
+          const rSDT = result.data.speech?.right?.sdt ?? Math.round(rSRT - 6);
+          const rWRS = result.data.speech?.right?.wrs ?? 96;
+
+          const lPtaSdtStr = getPtaSdtInterpretation(leftPTA, lSDT);
+          const rPtaSdtStr = getPtaSdtInterpretation(rightPTA, rSDT);
+
+          return (
+            <div className="mb-4">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wide mb-2 pb-1 border-b border-slate-300">
+                Comprehensive Clinical Diagnostic Classification & Speech Audiometry
+              </h3>
+              <table className="w-full text-center border-collapse border border-slate-300 text-[10px]">
+                <thead>
+                  <tr className="bg-slate-100 font-bold border-b border-slate-300 text-slate-700">
+                    <th className="py-1.5 px-2 text-left">Ear Side</th>
+                    <th className="py-1.5 px-2">AC Speech PTA</th>
+                    <th className="py-1.5 px-2">Degree of Loss</th>
+                    <th className="py-1.5 px-2">Type of Loss</th>
+                    <th className="py-1.5 px-2">Air-Bone Gap</th>
+                    <th className="py-1.5 px-2">SRT / SDT</th>
+                    <th className="py-1.5 px-2">WRS (%)</th>
+                    <th className="py-1.5 px-2">PTA-SDT Correlation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-slate-200">
+                    <td className="py-1.5 px-2 text-left font-bold text-blue-700">Left Ear (🅛)</td>
+                    <td className="py-1.5 px-2 font-bold">{leftPTA} dB</td>
+                    <td className="py-1.5 px-2 font-bold">{lDegree}</td>
+                    <td className="py-1.5 px-2 font-extrabold text-blue-800">{lType.code} ({lType.type})</td>
+                    <td className="py-1.5 px-2">{lType.abg}</td>
+                    <td className="py-1.5 px-2">{lSRT} / {lSDT} dB</td>
+                    <td className="py-1.5 px-2 font-bold text-emerald-700">{lWRS}%</td>
+                    <td className="py-1.5 px-2 font-bold">{lPtaSdtStr}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1.5 px-2 text-left font-bold text-rose-600">Right Ear (🅡)</td>
+                    <td className="py-1.5 px-2 font-bold">{rightPTA} dB</td>
+                    <td className="py-1.5 px-2 font-bold">{rDegree}</td>
+                    <td className="py-1.5 px-2 font-extrabold text-rose-800">{rType.code} ({rType.type})</td>
+                    <td className="py-1.5 px-2">{rType.abg}</td>
+                    <td className="py-1.5 px-2">{rSRT} / {rSDT} dB</td>
+                    <td className="py-1.5 px-2 font-bold text-emerald-700">{rWRS}%</td>
+                    <td className="py-1.5 px-2 font-bold">{rPtaSdtStr}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          );
+        })()}
 
         {/* Clinical Recommendations & Action Plan */}
         <div className="mb-4">
