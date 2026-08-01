@@ -37,7 +37,9 @@ const DEFAULT_DEMO_HISTORY = [
     confidence: 96.5,
     data: {
       left: { 250: 30, 500: 35, 1000: 35, 2000: 40, 4000: 40, 8000: 45 },
-      right: { 250: 25, 500: 30, 1000: 30, 2000: 35, 4000: 35, 8000: 40 }
+      right: { 250: 25, 500: 30, 1000: 30, 2000: 35, 4000: 35, 8000: 40 },
+      left_bc: { 250: 20, 500: 25, 1000: 25, 2000: 30, 4000: 30 },
+      right_bc: { 250: 15, 500: 20, 1000: 20, 2000: 25, 4000: 25 }
     },
     recommendations: [
       "Mild hearing loss detected in speech frequencies.",
@@ -59,7 +61,9 @@ const DEFAULT_DEMO_HISTORY = [
     confidence: 94.8,
     data: {
       left: { 250: 35, 500: 45, 1000: 50, 2000: 55, 4000: 60, 8000: 65 },
-      right: { 250: 30, 500: 40, 1000: 45, 2000: 50, 4000: 55, 8000: 60 }
+      right: { 250: 30, 500: 40, 1000: 45, 2000: 50, 4000: 55, 8000: 60 },
+      left_bc: { 250: 25, 500: 35, 1000: 40, 2000: 45, 4000: 50 },
+      right_bc: { 250: 20, 500: 30, 1000: 35, 2000: 40, 4000: 45 }
     },
     recommendations: [
       "Moderate hearing loss detected. Hearing aid fitting strongly advised.",
@@ -81,7 +85,9 @@ const DEFAULT_DEMO_HISTORY = [
     confidence: 99.1,
     data: {
       left: { 250: 10, 500: 15, 1000: 15, 2000: 15, 4000: 20, 8000: 20 },
-      right: { 250: 10, 500: 10, 1000: 15, 2000: 15, 4000: 15, 8000: 20 }
+      right: { 250: 10, 500: 10, 1000: 15, 2000: 15, 4000: 15, 8000: 20 },
+      left_bc: { 250: 5, 500: 10, 1000: 10, 2000: 10, 4000: 15 },
+      right_bc: { 250: 5, 500: 5, 1000: 10, 2000: 10, 4000: 10 }
     },
     recommendations: [
       "Hearing thresholds are within normal limits (≤ 25 dB HL).",
@@ -102,7 +108,9 @@ const DEFAULT_DEMO_HISTORY = [
     confidence: 97.4,
     data: {
       left: { 250: 60, 500: 70, 1000: 75, 2000: 80, 4000: 85, 8000: 90 },
-      right: { 250: 55, 500: 65, 1000: 70, 2000: 75, 4000: 80, 8000: 85 }
+      right: { 250: 55, 500: 65, 1000: 70, 2000: 75, 4000: 80, 8000: 85 },
+      left_bc: { 250: 50, 500: 60, 1000: 65, 2000: 70, 4000: 75 },
+      right_bc: { 250: 45, 500: 55, 1000: 60, 2000: 65, 4000: 70 }
     },
     recommendations: [
       "Severe hearing loss identified across key audiometric frequencies.",

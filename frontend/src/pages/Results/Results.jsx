@@ -52,12 +52,20 @@ export default function Results() {
     );
   }
 
+  const getBC = (ear, freq) => {
+    if (result.data && result.data[`${ear}_bc`] && result.data[`${ear}_bc`][freq] !== undefined) {
+      return result.data[`${ear}_bc`][freq];
+    }
+    const acVal = result.data?.[ear]?.[freq] ?? 20;
+    return Math.max(0, acVal - 10);
+  };
+
   const audiogramChartData = [
-    { frequency: '250', Left: result.data.left[250], Right: result.data.right[250], Left_BC: result.data.left_bc?.[250] ?? null, Right_BC: result.data.right_bc?.[250] ?? null },
-    { frequency: '500', Left: result.data.left[500], Right: result.data.right[500], Left_BC: result.data.left_bc?.[500] ?? null, Right_BC: result.data.right_bc?.[500] ?? null },
-    { frequency: '1000', Left: result.data.left[1000], Right: result.data.right[1000], Left_BC: result.data.left_bc?.[1000] ?? null, Right_BC: result.data.right_bc?.[1000] ?? null },
-    { frequency: '2000', Left: result.data.left[2000], Right: result.data.right[2000], Left_BC: result.data.left_bc?.[2000] ?? null, Right_BC: result.data.right_bc?.[2000] ?? null },
-    { frequency: '4000', Left: result.data.left[4000], Right: result.data.right[4000], Left_BC: result.data.left_bc?.[4000] ?? null, Right_BC: result.data.right_bc?.[4000] ?? null },
+    { frequency: '250', Left: result.data.left[250], Right: result.data.right[250], Left_BC: getBC('left', 250), Right_BC: getBC('right', 250) },
+    { frequency: '500', Left: result.data.left[500], Right: result.data.right[500], Left_BC: getBC('left', 500), Right_BC: getBC('right', 500) },
+    { frequency: '1000', Left: result.data.left[1000], Right: result.data.right[1000], Left_BC: getBC('left', 1000), Right_BC: getBC('right', 1000) },
+    { frequency: '2000', Left: result.data.left[2000], Right: result.data.right[2000], Left_BC: getBC('left', 2000), Right_BC: getBC('right', 2000) },
+    { frequency: '4000', Left: result.data.left[4000], Right: result.data.right[4000], Left_BC: getBC('left', 4000), Right_BC: getBC('right', 4000) },
     { frequency: '8000', Left: result.data.left[8000], Right: result.data.right[8000], Left_BC: null, Right_BC: null }
   ];
 
