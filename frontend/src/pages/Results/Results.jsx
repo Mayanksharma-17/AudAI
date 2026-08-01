@@ -99,6 +99,8 @@ export default function Results() {
         <circle cx="6" cy="6" r="4.5" fill="none" stroke="#e11d48" strokeWidth="2.5" />
       </svg>
     );
+  };
+
   const CustomRightBCDot = (props) => {
     const { cx, cy } = props;
     if (cx === undefined || cy === undefined) return null;
@@ -504,11 +506,11 @@ export default function Results() {
               title="PURE TONE AUDIOGRAM" 
               subtitle="Clinical Frequency (250Hz - 8kHz) vs Hearing Level (-10 to 120 dB HL). Reversed Y-axis clinical standard."
             >
-              <div className="w-[420px] h-[420px] aspect-square max-w-full mx-auto mt-2 p-3.5 bg-white dark:bg-slate-950 border-2 border-slate-900 dark:border-slate-300 rounded-2xl shadow-md flex flex-col justify-between">
+              <div className="w-[440px] h-[440px] aspect-square max-w-full mx-auto mt-2 p-4 bg-white dark:bg-slate-950 border-2 border-slate-900 dark:border-slate-300 rounded-2xl shadow-md flex flex-col justify-between">
                 
                 {/* Clinical Header with Masked / Unmasked Toggle */}
-                <div className="flex justify-between items-center text-[10px] font-extrabold uppercase text-slate-800 dark:text-slate-200 pb-1.5 border-b border-slate-200 dark:border-slate-800">
-                  <span>PURE TONE AUDIOGRAM</span>
+                <div className="flex justify-between items-center text-[10px] font-extrabold uppercase text-slate-800 dark:text-slate-200 pb-2 border-b border-slate-200 dark:border-slate-800">
+                  <span className="tracking-wider">PURE TONE AUDIOGRAM</span>
                   <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800">
                     <button
                       type="button"
