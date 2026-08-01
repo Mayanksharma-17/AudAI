@@ -541,11 +541,17 @@ export default function Upload() {
                                   type="number"
                                   min="0"
                                   max="120"
-                                  value={audiogramData[`L${f}`] !== undefined ? audiogramData[`L${f}`] : 20}
-                                  onChange={(e) => setAudiogramData({
-                                    ...audiogramData,
-                                    [`L${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
-                                  })}
+                                  value={audiogramData[`L${f}`] !== undefined ? audiogramData[`L${f}`] : ""}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+                                    const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                    setAudiogramData({ ...audiogramData, [`L${f}`]: val });
+                                  }}
+                                  onBlur={() => {
+                                    if (audiogramData[`L${f}`] === "" || isNaN(audiogramData[`L${f}`])) {
+                                      setAudiogramData(prev => ({ ...prev, [`L${f}`]: 20 }));
+                                    }
+                                  }}
                                   className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
                                 />
                                 <span className="text-[10px] text-slate-400 font-semibold">dB</span>
@@ -565,11 +571,17 @@ export default function Upload() {
                                   type="number"
                                   min="0"
                                   max="120"
-                                  value={audiogramData[`R${f}`] !== undefined ? audiogramData[`R${f}`] : 20}
-                                  onChange={(e) => setAudiogramData({
-                                    ...audiogramData,
-                                    [`R${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
-                                  })}
+                                  value={audiogramData[`R${f}`] !== undefined ? audiogramData[`R${f}`] : ""}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+                                    const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                    setAudiogramData({ ...audiogramData, [`R${f}`]: val });
+                                  }}
+                                  onBlur={() => {
+                                    if (audiogramData[`R${f}`] === "" || isNaN(audiogramData[`R${f}`])) {
+                                      setAudiogramData(prev => ({ ...prev, [`R${f}`]: 20 }));
+                                    }
+                                  }}
                                   className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
                                 />
                                 <span className="text-[10px] text-slate-400 font-semibold">dB</span>
@@ -615,11 +627,17 @@ export default function Upload() {
                                   type="number"
                                   min="0"
                                   max="120"
-                                  value={audiogramData[`L${f}_BC`] !== undefined ? audiogramData[`L${f}_BC`] : 20}
-                                  onChange={(e) => setAudiogramData({
-                                    ...audiogramData,
-                                    [`L${f}_BC`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
-                                  })}
+                                  value={audiogramData[`L${f}_BC`] !== undefined ? audiogramData[`L${f}_BC`] : ""}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+                                    const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                    setAudiogramData({ ...audiogramData, [`L${f}_BC`]: val });
+                                  }}
+                                  onBlur={() => {
+                                    if (audiogramData[`L${f}_BC`] === "" || isNaN(audiogramData[`L${f}_BC`])) {
+                                      setAudiogramData(prev => ({ ...prev, [`L${f}_BC`]: 20 }));
+                                    }
+                                  }}
                                   className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-secondary-500 focus:outline-none shadow-sm"
                                 />
                                 <span className="text-[10px] text-slate-400 font-semibold">dB</span>
@@ -639,11 +657,17 @@ export default function Upload() {
                                   type="number"
                                   min="0"
                                   max="120"
-                                  value={audiogramData[`R${f}_BC`] !== undefined ? audiogramData[`R${f}_BC`] : 20}
-                                  onChange={(e) => setAudiogramData({
-                                    ...audiogramData,
-                                    [`R${f}_BC`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
-                                  })}
+                                  value={audiogramData[`R${f}_BC`] !== undefined ? audiogramData[`R${f}_BC`] : ""}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+                                    const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                    setAudiogramData({ ...audiogramData, [`R${f}_BC`]: val });
+                                  }}
+                                  onBlur={() => {
+                                    if (audiogramData[`R${f}_BC`] === "" || isNaN(audiogramData[`R${f}_BC`])) {
+                                      setAudiogramData(prev => ({ ...prev, [`R${f}_BC`]: 20 }));
+                                    }
+                                  }}
                                   className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-secondary-500 focus:outline-none shadow-sm"
                                 />
                                 <span className="text-[10px] text-slate-400 font-semibold">dB</span>
