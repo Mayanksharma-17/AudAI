@@ -444,8 +444,35 @@ export default function Upload() {
 
             {/* Threshold Matrix Preview */}
             <div className="md:col-span-2 space-y-6">
-              <DashboardCard title="Audiogram Decibel Thresholds" subtitle="Air Conduction (AC) & Bone Conduction (BC) Entry (250Hz - 8000Hz)">
+              <DashboardCard title="Audiogram Decibel Thresholds (PTA)" subtitle="Air Conduction (AC) & Bone Conduction (BC) Entry (250Hz - 8000Hz)">
                 
+                {/* Live Real-Time 3-Frequency PTA Badges */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/40 dark:border-blue-800/40 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
+                        Left Ear 3-Freq PTA (0.5, 1, 2 kHz)
+                      </span>
+                      <span className="text-xl font-extrabold font-heading text-slate-900 dark:text-white">
+                        {(((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20)) / 3).toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
+                      </span>
+                    </div>
+                    <span className="h-3 w-3 rounded-full bg-blue-500 shadow-sm" />
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/40 dark:border-rose-800/40 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
+                        Right Ear 3-Freq PTA (0.5, 1, 2 kHz)
+                      </span>
+                      <span className="text-xl font-extrabold font-heading text-slate-900 dark:text-white">
+                        {(((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20)) / 3).toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
+                      </span>
+                    </div>
+                    <span className="h-3 w-3 rounded-full bg-rose-500 shadow-sm" />
+                  </div>
+                </div>
+
                 {/* 1. AIR CONDUCTION (AC) TABLE */}
                 <div className="space-y-2 mb-6">
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary-600 dark:text-primary-400 block">
