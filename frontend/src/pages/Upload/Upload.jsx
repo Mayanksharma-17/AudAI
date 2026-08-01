@@ -243,6 +243,7 @@ export default function Upload() {
   };
 
   const frequencies = ['250', '500', '1000', '2000', '4000', '8000'];
+  const bcFrequencies = ['250', '500', '1000', '2000', '4000'];
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 relative">
@@ -514,17 +515,17 @@ export default function Upload() {
                   </div>
                 </div>
 
-                {/* 2. BONE CONDUCTION (BC) TABLE */}
+                {/* 2. BONE CONDUCTION (BC) TABLE (250Hz - 4000Hz) */}
                 <div className="space-y-2">
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-secondary-600 dark:text-secondary-400 block">
-                    2. Bone Conduction (BC) Thresholds (dB HL)
+                    2. Bone Conduction (BC) Thresholds (dB HL - 250Hz to 4000Hz)
                   </span>
                   <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
                         <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800/40 text-slate-400 font-bold uppercase">
                           <th className="px-4 py-3">Conduction Pathway</th>
-                          {frequencies.map(f => (
+                          {bcFrequencies.map(f => (
                             <th key={f} className="px-2 py-3 text-center">{f} Hz</th>
                           ))}
                         </tr>
@@ -535,7 +536,7 @@ export default function Upload() {
                             <span className="h-2.5 w-2.5 rounded-full bg-indigo-500" />
                             Left Ear BC (L-BC)
                           </td>
-                          {frequencies.map(f => (
+                          {bcFrequencies.map(f => (
                             <td key={f} className="px-2 py-2 text-center font-bold">
                               <div className="flex items-center justify-center gap-1">
                                 <input
@@ -559,7 +560,7 @@ export default function Upload() {
                             <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
                             Right Ear BC (R-BC)
                           </td>
-                          {frequencies.map(f => (
+                          {bcFrequencies.map(f => (
                             <td key={f} className="px-2 py-2 text-center font-bold">
                               <div className="flex items-center justify-center gap-1">
                                 <input

@@ -376,11 +376,12 @@ export const mockApi = {
 
 // Fallback local simulation function
 function mockLocalPredict(patientInfo, audiogramData) {
-  const leftPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20) + (audiogramData.L4000 ?? 20)) / 4;
-  const rightPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20) + (audiogramData.R4000 ?? 20)) / 4;
+  // 3-Frequency Speech PTA (500Hz, 1000Hz, 2000Hz)
+  const leftPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20)) / 3;
+  const rightPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20)) / 3;
 
-  const leftPTA_BC = ((audiogramData.L500_BC ?? 20) + (audiogramData.L1000_BC ?? 20) + (audiogramData.L2000_BC ?? 20) + (audiogramData.L4000_BC ?? 20)) / 4;
-  const rightPTA_BC = ((audiogramData.R500_BC ?? 20) + (audiogramData.R1000_BC ?? 20) + (audiogramData.R2000_BC ?? 20) + (audiogramData.R4000_BC ?? 20)) / 4;
+  const leftPTA_BC = ((audiogramData.L500_BC ?? 20) + (audiogramData.L1000_BC ?? 20) + (audiogramData.L2000_BC ?? 20)) / 3;
+  const rightPTA_BC = ((audiogramData.R500_BC ?? 20) + (audiogramData.R1000_BC ?? 20) + (audiogramData.R2000_BC ?? 20)) / 3;
 
   const leftABG = leftPTA - leftPTA_BC;
   const rightABG = rightPTA - rightPTA_BC;
