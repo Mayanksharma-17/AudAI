@@ -555,6 +555,80 @@ export default function Upload() {
                     </table>
                   </div>
                 </div>
+
+                {/* BONE CONDUCTION (BC) THRESHOLD TABLE (250Hz - 4000Hz) */}
+                <div className="space-y-2 mt-6">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-secondary-600 dark:text-secondary-400 block">
+                      Bone Conduction (BC) Threshold Matrix (dB HL - 250Hz to 4000Hz)
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400">
+                      ★ Max 4000 Hz Transducer Limit
+                    </span>
+                  </div>
+                  <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800/40 text-slate-400 font-bold uppercase">
+                          <th className="px-4 py-3">Bone Conduction Ear</th>
+                          {bcFrequencies.map(f => (
+                            <th key={f} className="px-2 py-3 text-center">{f} Hz</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
+                        <tr>
+                          <td className="px-4 py-3 font-bold text-indigo-500 dark:text-indigo-400 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-indigo-500" />
+                            Left Ear BC (L-BC)
+                          </td>
+                          {bcFrequencies.map(f => (
+                            <td key={f} className="px-2 py-2 text-center font-bold">
+                              <div className="flex items-center justify-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="120"
+                                  value={audiogramData[`L${f}_BC`] !== undefined ? audiogramData[`L${f}_BC`] : 20}
+                                  onChange={(e) => setAudiogramData({
+                                    ...audiogramData,
+                                    [`L${f}_BC`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                  })}
+                                  className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-secondary-500 focus:outline-none shadow-sm"
+                                />
+                                <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-3 font-bold text-amber-500 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                            Right Ear BC (R-BC)
+                          </td>
+                          {bcFrequencies.map(f => (
+                            <td key={f} className="px-2 py-2 text-center font-bold">
+                              <div className="flex items-center justify-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="120"
+                                  value={audiogramData[`R${f}_BC`] !== undefined ? audiogramData[`R${f}_BC`] : 20}
+                                  onChange={(e) => setAudiogramData({
+                                    ...audiogramData,
+                                    [`R${f}_BC`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                  })}
+                                  className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-secondary-500 focus:outline-none shadow-sm"
+                                />
+                                <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
                 
                 {/* Analyze Trigger */}
                 <div className="mt-6 flex justify-end gap-3">
