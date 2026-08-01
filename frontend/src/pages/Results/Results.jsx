@@ -29,6 +29,7 @@ export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
+  const [isMaskedBC, setIsMaskedBC] = useState(false);
 
   useEffect(() => {
     if (location.state && location.state.result) {
@@ -95,7 +96,7 @@ export default function Results() {
     if (cx === undefined || cy === undefined) return null;
     return (
       <text x={cx} y={cy + 4} textAnchor="middle" fill="#d97706" fontSize="13" fontWeight="900">
-        &lt;
+        {isMaskedBC ? '[' : '<'}
       </text>
     );
   };
@@ -105,7 +106,7 @@ export default function Results() {
     if (cx === undefined || cy === undefined) return null;
     return (
       <text x={cx} y={cy + 4} textAnchor="middle" fill="#4f46e5" fontSize="13" fontWeight="900">
-        &gt;
+        {isMaskedBC ? ']' : '>'}
       </text>
     );
   };
@@ -497,10 +498,33 @@ export default function Results() {
             >
               <div className="w-[420px] h-[420px] aspect-square max-w-full mx-auto mt-2 p-3.5 bg-white dark:bg-slate-950 border-2 border-slate-900 dark:border-slate-300 rounded-2xl shadow-md flex flex-col justify-between">
                 
-                {/* Clinical Header */}
+                {/* Clinical Header with Masked / Unmasked Toggle */}
                 <div className="flex justify-between items-center text-[10px] font-extrabold uppercase text-slate-800 dark:text-slate-200 pb-1.5 border-b border-slate-200 dark:border-slate-800">
                   <span>PURE TONE AUDIOGRAM</span>
-                  <span className="text-primary-600 dark:text-primary-400">Reversed Y-Axis (ANSI 2004)</span>
+                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setIsMaskedBC(false)}
+                      className={`px-2 py-0.5 rounded text-[9px] font-extrabold transition-all ${
+                        !isMaskedBC 
+                          ? 'bg-white dark:bg-slate-800 text-primary-600 dark:text-primary-400 shadow-sm' 
+                          : 'text-slate-500 hover:text-slate-700'
+                      }`}
+                    >
+                      Unmasked (&lt; &gt;)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsMaskedBC(true)}
+                      className={`px-2 py-0.5 rounded text-[9px] font-extrabold transition-all ${
+                        isMaskedBC 
+                          ? 'bg-white dark:bg-slate-800 text-primary-600 dark:text-primary-400 shadow-sm' 
+                          : 'text-slate-500 hover:text-slate-700'
+                      }`}
+                    >
+                      Masked ([ ])
+                    </button>
+                  </div>
                 </div>
 
                 {/* 1:1 Square Chart Area */}
@@ -562,7 +586,7 @@ export default function Results() {
                       <Line 
                         type="monotone" 
                         dataKey="Right_BC" 
-                        name="Right Ear BC (<)" 
+                        name={isMaskedBC ? "Right Ear BC ([)" : "Right Ear BC (<)"} 
                         stroke="#d97706" 
                         strokeWidth={2} 
                         strokeDasharray="3 3"
@@ -572,7 +596,7 @@ export default function Results() {
                       <Line 
                         type="monotone" 
                         dataKey="Left_BC" 
-                        name="Left Ear BC (>)" 
+                        name={isMaskedBC ? "Left Ear BC (])" : "Left Ear BC (>)"} 
                         stroke="#4f46e5" 
                         strokeWidth={2} 
                         strokeDasharray="3 3"
@@ -587,8 +611,8 @@ export default function Results() {
                 <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-4 gap-1 text-[9px] text-center font-bold">
                   <div className="text-blue-600 dark:text-blue-400">AC Left (X)</div>
                   <div className="text-rose-600 dark:text-rose-400">AC Right (O)</div>
-                  <div className="text-indigo-600 dark:text-indigo-400">BC Left (&gt;)</div>
-                  <div className="text-amber-600 dark:text-amber-400">BC Right (&lt;)</div>
+                  <div className="text-indigo-600 dark:text-indigo-400">BC Left ({isMaskedBC ? ']' : '>'})</div>
+                  <div className="text-amber-600 dark:text-amber-400">BC Right ({isMaskedBC ? '[' : '<'})</div>
                 </div>
 
               </div>
