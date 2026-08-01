@@ -492,79 +492,96 @@ export default function Results() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <DashboardCard 
-              title="Interactive Audiogram Visualizer" 
-              subtitle="Frequency (Hz) vs Hearing Level (dB HL). Note: Reversed Y-axis represents clinical standard."
+              title="PURE TONE AUDIOGRAM" 
+              subtitle="Clinical Frequency (Hz) vs Hearing Level (dB HL) Plot. Note: Reversed Y-axis represents clinical standard."
             >
-              <div className="h-[380px] w-[380px] max-w-full mx-auto mt-4 p-2 bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl shadow-sm">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={audiogramChartData} margin={{ top: 20, right: 25, left: -20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-800" />
-                    <XAxis dataKey="frequency" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                    <YAxis 
-                      stroke="#94a3b8" 
-                      fontSize={11} 
-                      domain={[-10, 120]} 
-                      reversed={true} 
-                      tickCount={14}
-                      tickLine={false} 
-                    />
-                    <Tooltip 
-                      cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '4 4' }}
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderRadius: '12px', 
-                        boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                        color: '#f8fafc'
-                      }} 
-                      formatter={(value) => value !== null ? [`${value} dB HL`] : ['N/A']}
-                    />
-                    <Legend verticalAlign="top" height={36} iconSize={12} wrapperStyle={{ fontSize: 10, fontWeight: 700 }} />
-                    
-                    {/* Air Conduction Lines */}
-                    <Line 
-                      type="monotone" 
-                      dataKey="Left" 
-                      name="Left Ear AC (X)" 
-                      stroke="#2563eb" 
-                      strokeWidth={2.5} 
-                      strokeDasharray="5 5" 
-                      dot={<CustomLeftDot />} 
-                      activeDot={{ r: 6 }} 
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="Right" 
-                      name="Right Ear AC (O)" 
-                      stroke="#e11d48" 
-                      strokeWidth={2.5} 
-                      dot={<CustomRightDot />} 
-                      activeDot={{ r: 6 }} 
-                    />
+              <div className="w-[380px] h-[380px] aspect-square max-w-full mx-auto mt-4 p-3 bg-white dark:bg-slate-950 border-2 border-slate-800 dark:border-slate-200 rounded-2xl shadow-md flex flex-col justify-between">
+                
+                {/* Clinical Header */}
+                <div className="flex justify-between items-center text-[10px] font-extrabold uppercase text-slate-700 dark:text-slate-300 pb-1 border-b border-slate-200 dark:border-slate-800">
+                  <span>PURE TONE AUDIOGRAM</span>
+                  <span className="text-primary-600 dark:text-primary-400">Reversed Y-Axis (ANSI 2004)</span>
+                </div>
 
-                    {/* Bone Conduction Lines */}
-                    <Line 
-                      type="monotone" 
-                      dataKey="Right_BC" 
-                      name="Right Ear BC (<)" 
-                      stroke="#d97706" 
-                      strokeWidth={2} 
-                      strokeDasharray="3 3"
-                      connectNulls={true}
-                      dot={<CustomRightBCDot />} 
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="Left_BC" 
-                      name="Left Ear BC (>)" 
-                      stroke="#4f46e5" 
-                      strokeWidth={2} 
-                      strokeDasharray="3 3"
-                      connectNulls={true}
-                      dot={<CustomLeftBCDot />} 
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+                <div className="flex-1 w-full relative">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={audiogramChartData} margin={{ top: 15, right: 20, left: -25, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="1 1" stroke="#cbd5e1" className="dark:stroke-slate-800" />
+                      <XAxis dataKey="frequency" stroke="#64748b" fontSize={10} tickLine={true} />
+                      <YAxis 
+                        stroke="#64748b" 
+                        fontSize={10} 
+                        domain={[-10, 120]} 
+                        reversed={true} 
+                        tickCount={14}
+                        tickLine={true} 
+                      />
+                      <Tooltip 
+                        cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '4 4' }}
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                          borderColor: 'rgba(255, 255, 255, 0.1)',
+                          borderRadius: '12px', 
+                          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                          color: '#f8fafc'
+                        }} 
+                        formatter={(value) => value !== null ? [`${value} dB HL`] : ['N/A']}
+                      />
+                      
+                      {/* Air Conduction Lines */}
+                      <Line 
+                        type="monotone" 
+                        dataKey="Left" 
+                        name="Left Ear AC (X)" 
+                        stroke="#2563eb" 
+                        strokeWidth={2.5} 
+                        strokeDasharray="5 5" 
+                        dot={<CustomLeftDot />} 
+                        activeDot={{ r: 6 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="Right" 
+                        name="Right Ear AC (O)" 
+                        stroke="#e11d48" 
+                        strokeWidth={2.5} 
+                        dot={<CustomRightDot />} 
+                        activeDot={{ r: 6 }} 
+                      />
+
+                      {/* Bone Conduction Lines */}
+                      <Line 
+                        type="monotone" 
+                        dataKey="Right_BC" 
+                        name="Right Ear BC (<)" 
+                        stroke="#d97706" 
+                        strokeWidth={2} 
+                        strokeDasharray="3 3"
+                        connectNulls={true}
+                        dot={<CustomRightBCDot />} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="Left_BC" 
+                        name="Left Ear BC (>)" 
+                        stroke="#4f46e5" 
+                        strokeWidth={2} 
+                        strokeDasharray="3 3"
+                        connectNulls={true}
+                        dot={<CustomLeftBCDot />} 
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Clinical Legend Footer */}
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-4 gap-1 text-[9px] text-center font-bold">
+                  <div className="text-blue-600 dark:text-blue-400">AC Left (X)</div>
+                  <div className="text-rose-600 dark:text-rose-400">AC Right (O)</div>
+                  <div className="text-indigo-600 dark:text-indigo-400">BC Left (&gt;)</div>
+                  <div className="text-amber-600 dark:text-amber-400">BC Right (&lt;)</div>
+                </div>
+
               </div>
             </DashboardCard>
           </div>
