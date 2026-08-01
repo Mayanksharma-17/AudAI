@@ -489,31 +489,40 @@ export default function Results() {
         </DashboardCard>
 
         {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div>
             <DashboardCard 
               title="PURE TONE AUDIOGRAM" 
-              subtitle="Clinical Frequency (Hz) vs Hearing Level (dB HL) Plot. Note: Reversed Y-axis represents clinical standard."
+              subtitle="Clinical Frequency (250Hz - 8kHz) vs Hearing Level (-10 to 120 dB HL). Reversed Y-axis clinical standard."
             >
-              <div className="w-[380px] h-[380px] aspect-square max-w-full mx-auto mt-4 p-3 bg-white dark:bg-slate-950 border-2 border-slate-800 dark:border-slate-200 rounded-2xl shadow-md flex flex-col justify-between">
+              <div className="w-[420px] h-[420px] aspect-square max-w-full mx-auto mt-2 p-3.5 bg-white dark:bg-slate-950 border-2 border-slate-900 dark:border-slate-300 rounded-2xl shadow-md flex flex-col justify-between">
                 
                 {/* Clinical Header */}
-                <div className="flex justify-between items-center text-[10px] font-extrabold uppercase text-slate-700 dark:text-slate-300 pb-1 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex justify-between items-center text-[10px] font-extrabold uppercase text-slate-800 dark:text-slate-200 pb-1.5 border-b border-slate-200 dark:border-slate-800">
                   <span>PURE TONE AUDIOGRAM</span>
                   <span className="text-primary-600 dark:text-primary-400">Reversed Y-Axis (ANSI 2004)</span>
                 </div>
 
-                <div className="flex-1 w-full relative">
+                {/* 1:1 Square Chart Area */}
+                <div className="flex-1 w-full relative pt-2">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={audiogramChartData} margin={{ top: 15, right: 20, left: -25, bottom: 0 }}>
+                    <LineChart data={audiogramChartData} margin={{ top: 10, right: 20, left: -20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="1 1" stroke="#cbd5e1" className="dark:stroke-slate-800" />
-                      <XAxis dataKey="frequency" stroke="#64748b" fontSize={10} tickLine={true} />
+                      <XAxis 
+                        dataKey="frequency" 
+                        stroke="#64748b" 
+                        fontSize={10} 
+                        fontWeight={700}
+                        tickLine={true} 
+                        unit=" Hz"
+                      />
                       <YAxis 
                         stroke="#64748b" 
                         fontSize={10} 
+                        fontWeight={700}
                         domain={[-10, 120]} 
+                        ticks={[-10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]}
                         reversed={true} 
-                        tickCount={14}
                         tickLine={true} 
                       />
                       <Tooltip 
