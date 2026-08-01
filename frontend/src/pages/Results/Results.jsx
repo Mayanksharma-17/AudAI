@@ -92,8 +92,8 @@ export default function Results() {
     );
   };
 
-  const leftPTA = ((result.data.left[500] + result.data.left[1000] + result.data.left[2000] + result.data.left[4000]) / 4).toFixed(1);
-  const rightPTA = ((result.data.right[500] + result.data.right[1000] + result.data.right[2000] + result.data.right[4000]) / 4).toFixed(1);
+  const leftPTA = ((result.data.left[500] + result.data.left[1000] + result.data.left[2000]) / 3).toFixed(1);
+  const rightPTA = ((result.data.right[500] + result.data.right[1000] + result.data.right[2000]) / 3).toFixed(1);
 
   const pageVariants = {
     hidden: { opacity: 0, y: 10 },
