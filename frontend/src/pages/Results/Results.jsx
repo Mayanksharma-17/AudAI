@@ -264,6 +264,122 @@ export default function Results() {
           </table>
         </div>
 
+        {/* Printable Square Pure Tone Audiogram Visualizer Graph */}
+        <div className="mb-4 p-3 bg-white border border-slate-300 rounded-lg text-center">
+          <div className="flex justify-between items-center pb-1 border-b border-slate-300 text-[9px] font-black uppercase text-slate-800 tracking-wider">
+            <span>PURE TONE AUDIOGRAM VISUALIZER SUMMARY</span>
+            <span>Clinical Standard: Reversed Y-Axis (-10 to 120 dB HL) &bull; Linear Point Connections</span>
+          </div>
+          {(() => {
+            const freqs = [250, 500, 1000, 2000, 4000, 8000];
+            const w = 340;
+            const h = 320;
+            const m = { top: 25, right: 25, bottom: 30, left: 40 };
+            const cW = w - m.left - m.right;
+            const cH = h - m.top - m.bottom;
+
+            const getY = (db) => {
+              const clamped = Math.max(-10, Math.min(120, parseFloat(db ?? 20)));
+              return m.top + ((clamped - (-10)) / 130) * cH;
+            };
+
+            const getX = (idx) => m.left + (idx / (freqs.length - 1)) * cW;
+
+            const yTicks = [-10, 0, 20, 40, 60, 80, 100, 120];
+
+            const leftAcD = freqs.map((f, i) => `${i === 0 ? 'M' : 'L'} ${getX(i)} ${getY(result.data.left[f])}`).join(' ');
+            const rightAcD = freqs.map((f, i) => `${i === 0 ? 'M' : 'L'} ${getX(i)} ${getY(result.data.right[f])}`).join(' ');
+
+            const leftBcD = [0,1,2,3,4].map((i, idx) => `${idx === 0 ? 'M' : 'L'} ${getX(i)} ${getY(getBC('left', freqs[i]))}`).join(' ');
+            const rightBcD = [0,1,2,3,4].map((i, idx) => `${idx === 0 ? 'M' : 'L'} ${getX(i)} ${getY(getBC('right', freqs[i]))}`).join(' ');
+
+            return (
+              <div className="flex flex-col items-center my-2">
+                <svg width={w} height={h} className="bg-white">
+                  {/* Outer Square Border */}
+                  <rect x={m.left} y={m.top} width={cW} height={cH} fill="none" stroke="#1e293b" strokeWidth="1.5" />
+                  
+                  {/* Horizontal Grid & Y Ticks */}
+                  {yTicks.map(db => {
+                    const y = getY(db);
+                    return (
+                      <g key={db}>
+                        <line x1={m.left} y1={y} x2={w - m.right} y2={y} stroke="#cbd5e1" strokeDasharray="2 2" strokeWidth="0.8" />
+                        <text x={m.left - 5} y={y + 3} textAnchor="end" fontSize="8" fontWeight="800" fill="#334155">{db}</text>
+                      </g>
+                    );
+                  })}
+
+                  {/* Vertical Grid & X Ticks */}
+                  {freqs.map((f, i) => {
+                    const x = getX(i);
+                    return (
+                      <g key={f}>
+                        <line x1={x} y1={m.top} x2={x} y2={h - m.bottom} stroke="#cbd5e1" strokeDasharray="2 2" strokeWidth="0.8" />
+                        <text x={x} y={h - m.bottom + 12} textAnchor="middle" fontSize="8" fontWeight="800" fill="#334155">{f}Hz</text>
+                      </g>
+                    );
+                  })}
+
+                  {/* Left Ear AC Line (Blue Solid) */}
+                  <path d={leftAcD} fill="none" stroke="#2563eb" strokeWidth="2" />
+
+                  {/* Right Ear AC Line (Red Solid) */}
+                  <path d={rightAcD} fill="none" stroke="#e11d48" strokeWidth="2" />
+
+                  {/* Right Ear BC Line (Amber Dashed) */}
+                  <path d={rightBcD} fill="none" stroke="#d97706" strokeWidth="1.5" strokeDasharray="3 3" />
+
+                  {/* Left Ear BC Line (Indigo Dashed) */}
+                  <path d={leftBcD} fill="none" stroke="#4f46e5" strokeWidth="1.5" strokeDasharray="3 3" />
+
+                  {/* Symbols & Points */}
+                  {freqs.map((f, i) => {
+                    const x = getX(i);
+                    const lAc = result.data.left[f];
+                    const rAc = result.data.right[f];
+                    const lBc = getBC('left', f);
+                    const rBc = getBC('right', f);
+
+                    return (
+                      <g key={f}>
+                        {/* Left Ear AC Cross (X) */}
+                        {lAc !== undefined && (
+                          <text x={x} y={getY(lAc) + 3.5} textAnchor="middle" fill="#2563eb" fontSize="11" fontWeight="900">✕</text>
+                        )}
+                        {/* Right Ear AC Circle (O) */}
+                        {rAc !== undefined && (
+                          <circle cx={x} cy={getY(rAc)} r="4" fill="none" stroke="#e11d48" strokeWidth="2" />
+                        )}
+                        {/* Right Ear BC Bracket (< or [) */}
+                        {i < 5 && rBc !== undefined && (
+                          <text x={x - 7} y={getY(rBc) + 3.5} textAnchor="middle" fill="#d97706" fontSize="10" fontWeight="900">
+                            {isMaskedBC ? '[' : '<'}
+                          </text>
+                        )}
+                        {/* Left Ear BC Bracket (> or ]) */}
+                        {i < 5 && lBc !== undefined && (
+                          <text x={x + 7} y={getY(lBc) + 3.5} textAnchor="middle" fill="#4f46e5" fontSize="10" fontWeight="900">
+                            {isMaskedBC ? ']' : '>'}
+                          </text>
+                        )}
+                      </g>
+                    );
+                  })}
+                </svg>
+
+                {/* Printable Legend Footer */}
+                <div className="flex justify-center gap-5 text-[9px] font-black uppercase border-t border-slate-200 pt-1 mt-1 w-full text-slate-800">
+                  <span className="text-rose-600">🔴 Right Ear AC: O</span>
+                  <span className="text-blue-700">🔵 Left Ear AC: X</span>
+                  <span className="text-amber-600">🟠 Right BC: {isMaskedBC ? '[' : '<'}</span>
+                  <span className="text-indigo-700">🟣 Left BC: {isMaskedBC ? ']' : '>'}</span>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+
         {/* Diagnostic Breakdown Summary Table (Degree, Type, ABG, SRT/SDT/WRS & PTA-SDT Correlation) */}
         {(() => {
           const getDegreeOfLoss = (pta) => {
