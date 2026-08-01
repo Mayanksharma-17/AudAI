@@ -22,9 +22,104 @@ const DEFAULT_PROFILE = {
   joinedDate: "July 2026"
 };
 
-// Initialize default profile in localStorage
+const DEFAULT_DEMO_HISTORY = [
+  {
+    id: "AUD-7576",
+    analysis_id: 7576,
+    patientId: "P-2372",
+    patientName: "David Miller",
+    age: 29,
+    gender: "Male",
+    date: new Date(Date.now() - 3600000 * 2).toISOString(),
+    prediction: "Mild Hearing Loss",
+    severity: "Mild",
+    disability: 13.1,
+    confidence: 96.5,
+    data: {
+      left: { 250: 30, 500: 35, 1000: 35, 2000: 40, 4000: 40, 8000: 45 },
+      right: { 250: 25, 500: 30, 1000: 30, 2000: 35, 4000: 35, 8000: 40 }
+    },
+    recommendations: [
+      "Mild hearing loss detected in speech frequencies.",
+      "Digital hearing aid evaluation recommended.",
+      "Consult ENT specialist for audiological workup."
+    ]
+  },
+  {
+    id: "AUD-4821",
+    analysis_id: 4821,
+    patientId: "P-8419",
+    patientName: "Anita Sharma",
+    age: 52,
+    gender: "Female",
+    date: new Date(Date.now() - 3600000 * 24).toISOString(),
+    prediction: "Moderate Hearing Loss",
+    severity: "Moderate",
+    disability: 34.5,
+    confidence: 94.8,
+    data: {
+      left: { 250: 35, 500: 45, 1000: 50, 2000: 55, 4000: 60, 8000: 65 },
+      right: { 250: 30, 500: 40, 1000: 45, 2000: 50, 4000: 55, 8000: 60 }
+    },
+    recommendations: [
+      "Moderate hearing loss detected. Hearing aid fitting strongly advised.",
+      "Speech-in-noise testing recommended to evaluate functional performance.",
+      "Consultation with an Audiologist / ENT specialist."
+    ]
+  },
+  {
+    id: "AUD-3109",
+    analysis_id: 3109,
+    patientId: "P-1044",
+    patientName: "Alice Johnson",
+    age: 34,
+    gender: "Female",
+    date: new Date(Date.now() - 3600000 * 48).toISOString(),
+    prediction: "Normal Hearing",
+    severity: "Normal",
+    disability: 0.0,
+    confidence: 99.1,
+    data: {
+      left: { 250: 10, 500: 15, 1000: 15, 2000: 15, 4000: 20, 8000: 20 },
+      right: { 250: 10, 500: 10, 1000: 15, 2000: 15, 4000: 15, 8000: 20 }
+    },
+    recommendations: [
+      "Hearing thresholds are within normal limits (≤ 25 dB HL).",
+      "Recommend routine annual audiometric monitoring."
+    ]
+  },
+  {
+    id: "AUD-9022",
+    analysis_id: 9022,
+    patientId: "P-6612",
+    patientName: "Robert Chen",
+    age: 61,
+    gender: "Male",
+    date: new Date(Date.now() - 3600000 * 72).toISOString(),
+    prediction: "Severe Hearing Loss",
+    severity: "Severe",
+    disability: 68.2,
+    confidence: 97.4,
+    data: {
+      left: { 250: 60, 500: 70, 1000: 75, 2000: 80, 4000: 85, 8000: 90 },
+      right: { 250: 55, 500: 65, 1000: 70, 2000: 75, 4000: 80, 8000: 85 }
+    },
+    recommendations: [
+      "Severe hearing loss identified across key audiometric frequencies.",
+      "Immediate ENT consultation for medical workup.",
+      "Evaluation for high-power digital hearing aids or Cochlear Implant candidacy."
+    ]
+  }
+];
+
+// Initialize default profile and history in localStorage if empty
 if (!localStorage.getItem("audai_profile")) {
   localStorage.setItem("audai_profile", JSON.stringify(DEFAULT_PROFILE));
+}
+
+const existingHistoryStr = localStorage.getItem("audai_history");
+if (!existingHistoryStr || JSON.parse(existingHistoryStr).length === 0) {
+  localStorage.setItem("audai_history", JSON.stringify(DEFAULT_DEMO_HISTORY));
 }
 
 export const mockApi = {
@@ -131,7 +226,7 @@ export const mockApi = {
       };
 
       // Save to localStorage history for quick client cache
-      const history = JSON.parse(localStorage.getItem("audai_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("audai_history") || JSON.stringify(DEFAULT_DEMO_HISTORY));
       history.unshift(formattedResult);
       localStorage.setItem("audai_history", JSON.stringify(history));
 
@@ -190,7 +285,7 @@ export const mockApi = {
         recommendations: aiResult.recommendations || []
       };
 
-      const history = JSON.parse(localStorage.getItem("audai_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("audai_history") || JSON.stringify(DEFAULT_DEMO_HISTORY));
       history.unshift(formattedResult);
       localStorage.setItem("audai_history", JSON.stringify(history));
 
@@ -205,7 +300,7 @@ export const mockApi = {
   getHistory: async () => {
     try {
       const response = await api.get('/analysis/history');
-      if (response.data && response.data.history) {
+      if (response.data && response.data.history && response.data.history.length > 0) {
         return response.data.history.map(item => ({
           id: `AUD-${item.analysis_id}`,
           analysis_id: item.analysis_id,
@@ -242,7 +337,12 @@ export const mockApi = {
     } catch (err) {
       console.warn("Backend history fetch failed, returning cached history:", err.message);
     }
-    return JSON.parse(localStorage.getItem("audai_history") || "[]");
+    const cached = localStorage.getItem("audai_history");
+    if (!cached || JSON.parse(cached).length === 0) {
+      localStorage.setItem("audai_history", JSON.stringify(DEFAULT_DEMO_HISTORY));
+      return DEFAULT_DEMO_HISTORY;
+    }
+    return JSON.parse(cached);
   },
 
   // PDF Report Download
