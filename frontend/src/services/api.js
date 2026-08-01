@@ -388,12 +388,19 @@ function mockLocalPredict(patientInfo, audiogramData) {
   const maxABG = Math.max(leftABG, rightABG);
   const maxPTA = Math.max(leftPTA, rightPTA);
 
-  let severity = "Normal";
-  if (maxPTA > 90) severity = "Profound";
-  else if (maxPTA > 70) severity = "Severe";
-  else if (maxPTA > 55) severity = "Moderately Severe";
-  else if (maxPTA > 40) severity = "Moderate";
-  else if (maxPTA > 25) severity = "Mild";
+  const getDegree = (pta) => {
+    if (pta <= 25) return "Normal";
+    if (pta <= 40) return "Mild";
+    if (pta <= 55) return "Moderate";
+    if (pta <= 70) return "Moderately Severe";
+    if (pta <= 90) return "Severe";
+    return "Profound";
+  };
+
+  const leftDegree = getDegree(leftPTA);
+  const rightDegree = getDegree(rightPTA);
+
+  let severity = getDegree(maxPTA);
 
   let lossType = "Sensorineural";
   if (maxABG >= 15) {

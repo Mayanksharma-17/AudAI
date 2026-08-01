@@ -446,37 +446,63 @@ export default function Upload() {
             <div className="md:col-span-2 space-y-6">
               <DashboardCard title="Audiogram Decibel Thresholds (3-Freq PTA)" subtitle="Enter 500Hz, 1000Hz, 2000Hz to calculate 3-frequency Pure Tone Average">
                 
-                {/* Live Real-Time 3-Frequency PTA Cards */}
+                {/* Live Real-Time AC-PTA & Degree of Hearing Loss Cards */}
                 {(() => {
                   const lPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20)) / 3;
                   const rPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20)) / 3;
 
+                  const getDegreeOfLoss = (pta) => {
+                    if (pta <= 25) return { label: 'Normal', bg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' };
+                    if (pta <= 40) return { label: 'Mild', bg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' };
+                    if (pta <= 55) return { label: 'Moderate', bg: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' };
+                    if (pta <= 70) return { label: 'Moderately Severe', bg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20' };
+                    if (pta <= 90) return { label: 'Severe', bg: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' };
+                    return { label: 'Profound', bg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20' };
+                  };
+
+                  const lDegree = getDegreeOfLoss(lPTA);
+                  const rDegree = getDegreeOfLoss(rPTA);
+
                   return (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                       {/* Left Ear */}
-                      <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/40 dark:border-blue-800/40 flex items-center justify-between">
-                        <div>
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
-                            Left Ear Pure Tone Average (0.5, 1, 2 kHz)
+                      <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/40 dark:border-blue-800/40 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                            Left Ear AC-PTA (0.5, 1, 2 kHz)
                           </span>
-                          <span className="text-xl font-extrabold font-heading text-slate-900 dark:text-white">
-                            {lPTA.toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
+                          <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${lDegree.bg}`}>
+                            {lDegree.label}
                           </span>
                         </div>
-                        <span className="h-3 w-3 rounded-full bg-blue-500 shadow-sm" />
+                        <div className="flex items-baseline justify-between">
+                          <span className="text-2xl font-black font-heading text-slate-900 dark:text-white">
+                            {lPTA.toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
+                          </span>
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                            Degree: <strong className="text-slate-800 dark:text-slate-200">{lDegree.label} Loss</strong>
+                          </span>
+                        </div>
                       </div>
 
                       {/* Right Ear */}
-                      <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/40 dark:border-rose-800/40 flex items-center justify-between">
-                        <div>
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
-                            Right Ear Pure Tone Average (0.5, 1, 2 kHz)
+                      <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/40 dark:border-rose-800/40 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                            Right Ear AC-PTA (0.5, 1, 2 kHz)
                           </span>
-                          <span className="text-xl font-extrabold font-heading text-slate-900 dark:text-white">
-                            {rPTA.toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
+                          <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${rDegree.bg}`}>
+                            {rDegree.label}
                           </span>
                         </div>
-                        <span className="h-3 w-3 rounded-full bg-rose-500 shadow-sm" />
+                        <div className="flex items-baseline justify-between">
+                          <span className="text-2xl font-black font-heading text-slate-900 dark:text-white">
+                            {rPTA.toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
+                          </span>
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                            Degree: <strong className="text-slate-800 dark:text-slate-200">{rDegree.label} Loss</strong>
+                          </span>
+                        </div>
                       </div>
                     </div>
                   );
