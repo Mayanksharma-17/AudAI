@@ -444,65 +444,39 @@ export default function Upload() {
 
             {/* Threshold Matrix Preview */}
             <div className="md:col-span-2 space-y-6">
-              <DashboardCard title="Audiogram Decibel Thresholds (3-Freq PTA)" subtitle="Enter 500Hz, 1000Hz, 2000Hz to calculate 3-frequency Pure Tone Average & Statutory Hearing Loss %">
+              <DashboardCard title="Audiogram Decibel Thresholds (3-Freq PTA)" subtitle="Enter 500Hz, 1000Hz, 2000Hz to calculate 3-frequency Pure Tone Average">
                 
-                {/* Live Real-Time 3-Frequency PTA & Hearing Loss % Cards */}
+                {/* Live Real-Time 3-Frequency PTA Cards */}
                 {(() => {
                   const lPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20)) / 3;
                   const rPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20)) / 3;
-                  
-                  const lImp = Math.max(0, Math.min(100, (lPTA - 25) * 1.5));
-                  const rImp = Math.max(0, Math.min(100, (rPTA - 25) * 1.5));
-
-                  const betterImp = Math.min(lImp, rImp);
-                  const worseImp = Math.max(lImp, rImp);
-                  const bilateralDisability = Math.min(100, (5 * betterImp + worseImp) / 6);
 
                   return (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                       {/* Left Ear */}
-                      <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/40 dark:border-blue-800/40 space-y-1">
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
-                          Left Ear PTA (0.5, 1, 2 kHz)
-                        </span>
-                        <div className="flex items-baseline justify-between">
+                      <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/40 dark:border-blue-800/40 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
+                            Left Ear Pure Tone Average (0.5, 1, 2 kHz)
+                          </span>
                           <span className="text-xl font-extrabold font-heading text-slate-900 dark:text-white">
                             {lPTA.toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
                           </span>
-                          <span className="text-xs font-extrabold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/50 px-2 py-0.5 rounded-md">
-                            {lImp.toFixed(1)}% Monoaural
-                          </span>
                         </div>
+                        <span className="h-3 w-3 rounded-full bg-blue-500 shadow-sm" />
                       </div>
 
                       {/* Right Ear */}
-                      <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/40 dark:border-rose-800/40 space-y-1">
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
-                          Right Ear PTA (0.5, 1, 2 kHz)
-                        </span>
-                        <div className="flex items-baseline justify-between">
+                      <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/40 dark:border-rose-800/40 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
+                            Right Ear Pure Tone Average (0.5, 1, 2 kHz)
+                          </span>
                           <span className="text-xl font-extrabold font-heading text-slate-900 dark:text-white">
                             {rPTA.toFixed(1)} <span className="text-xs font-semibold text-slate-400">dB HL</span>
                           </span>
-                          <span className="text-xs font-extrabold text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-900/50 px-2 py-0.5 rounded-md">
-                            {rImp.toFixed(1)}% Monoaural
-                          </span>
                         </div>
-                      </div>
-
-                      {/* Bilateral Disability % */}
-                      <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/40 dark:border-emerald-800/40 space-y-1">
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
-                          Statutory Disability %
-                        </span>
-                        <div className="flex items-baseline justify-between">
-                          <span className="text-2xl font-black font-heading text-emerald-600 dark:text-emerald-400">
-                            {bilateralDisability.toFixed(1)}%
-                          </span>
-                          <span className="text-[10px] font-extrabold text-emerald-700 dark:text-emerald-300">
-                            WHO / MSJE Formula
-                          </span>
-                        </div>
+                        <span className="h-3 w-3 rounded-full bg-rose-500 shadow-sm" />
                       </div>
                     </div>
                   );
