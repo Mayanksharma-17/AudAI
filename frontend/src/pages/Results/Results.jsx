@@ -357,14 +357,10 @@ export default function Results() {
               <span className="block text-[9px] uppercase tracking-wider font-bold text-slate-400 mb-1">Disability</span>
               <span className="text-2xl font-extrabold font-heading text-rose-600 dark:text-rose-400">{result.disability}%</span>
             </div>
-            <div className="text-center bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/60 rounded-xl px-5 py-3 min-w-[100px]">
-              <span className="block text-[9px] uppercase tracking-wider font-bold text-slate-400 mb-1">Confidence</span>
-              <span className="text-2xl font-extrabold font-heading text-emerald-600 dark:text-emerald-400">{result.confidence}%</span>
-            </div>
           </div>
         </div>
 
-        {/* Ear-wise AC-PTA & Degree of Hearing Loss Classification Cards */}
+        {/* Ear-wise AC-PTA Degree & Type of Hearing Loss Classification Section */}
         {(() => {
           const getDegreeOfLoss = (pta) => {
             const num = parseFloat(pta);
@@ -376,48 +372,175 @@ export default function Results() {
             return { label: 'Profound', bg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20' };
           };
 
+          const getLossTypeObj = (acVal, bcVal) => {
+            const ac = parseFloat(acVal);
+            const bc = parseFloat(bcVal);
+            const abg = ac - bc;
+
+            if (ac <= 25) {
+              return {
+                type: "Normal Hearing",
+                code: "Normal",
+                color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+                acStatus: `Normal (${ac.toFixed(1)} dB ≤ 25 dB)`,
+                bcStatus: `Normal (${bc.toFixed(1)} dB ≤ 25 dB)`,
+                abgStatus: `Absent (${abg.toFixed(1)} dB ≤ 10 dB)`,
+                definition: "Hearing thresholds for both air and bone conduction are within normal limits (≤ 25 dB HL)."
+              };
+            }
+
+            if (bc <= 25) {
+              return {
+                type: "Conductive Hearing Loss",
+                code: "CHL",
+                color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20",
+                acStatus: `Elevated (${ac.toFixed(1)} dB > 25 dB)`,
+                bcStatus: `Normal (${bc.toFixed(1)} dB ≤ 25 dB)`,
+                abgStatus: `Significant (${abg.toFixed(1)} dB > 10 dB)`,
+                definition: "Disorder of the outer or middle ear reducing sound transmission to inner ear. Cochlea and auditory nerve function normally."
+              };
+            }
+
+            if (abg > 10) {
+              return {
+                type: "Mixed Hearing Loss",
+                code: "MHL",
+                color: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20",
+                acStatus: `Elevated (${ac.toFixed(1)} dB > 25 dB)`,
+                bcStatus: `Elevated (${bc.toFixed(1)} dB > 25 dB)`,
+                abgStatus: `Present (${abg.toFixed(1)} dB > 10 dB)`,
+                definition: "Combination of conductive and sensorineural hearing loss. Sound transmission through outer/middle ear is impaired, plus inner ear/nerve damage."
+              };
+            }
+
+            return {
+              type: "Sensorineural Hearing Loss",
+              code: "SNHL",
+              color: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+              acStatus: `Elevated (${ac.toFixed(1)} dB > 25 dB)`,
+              bcStatus: `Elevated (${bc.toFixed(1)} dB > 25 dB)`,
+              abgStatus: `Absent/Not Significant (${abg.toFixed(1)} dB ≤ 10 dB)`,
+              definition: "Damage to inner ear (cochlea) sensory hair cells or auditory nerve. Outer and middle ear function normally."
+            };
+          };
+
           const lDegree = getDegreeOfLoss(leftPTA);
           const rDegree = getDegreeOfLoss(rightPTA);
 
+          const lBC_PTA = ((getBC('left', 500) + getBC('left', 1000) + getBC('left', 2000)) / 3).toFixed(1);
+          const rBC_PTA = ((getBC('right', 500) + getBC('right', 1000) + getBC('right', 2000)) / 3).toFixed(1);
+
+          const lType = getLossTypeObj(leftPTA, lBC_PTA);
+          const rType = getLossTypeObj(rightPTA, rBC_PTA);
+
           return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 p-5 rounded-2xl shadow-soft space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                    Left Ear AC-PTA (0.5, 1, 2 kHz)
-                  </span>
-                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${lDegree.bg}`}>
-                    {lDegree.label} Hearing Loss
-                  </span>
+            <div className="space-y-6">
+              {/* Degree of Loss Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 p-5 rounded-2xl shadow-soft space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                      Left Ear AC-PTA (0.5, 1, 2 kHz)
+                    </span>
+                    <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${lDegree.bg}`}>
+                      {lDegree.label} Hearing Loss
+                    </span>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-1">
+                    <span className="text-3xl font-black font-heading text-slate-900 dark:text-white">
+                      {leftPTA} <span className="text-sm font-semibold text-slate-400">dB HL</span>
+                    </span>
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Degree of Loss: <strong className="text-slate-800 dark:text-slate-100">{lDegree.label}</strong>
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-baseline justify-between pt-1">
-                  <span className="text-3xl font-black font-heading text-slate-900 dark:text-white">
-                    {leftPTA} <span className="text-sm font-semibold text-slate-400">dB HL</span>
-                  </span>
-                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                    Degree of Loss: <strong className="text-slate-800 dark:text-slate-100">{lDegree.label}</strong>
-                  </span>
+
+                <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 p-5 rounded-2xl shadow-soft space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                      Right Ear AC-PTA (0.5, 1, 2 kHz)
+                    </span>
+                    <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${rDegree.bg}`}>
+                      {rDegree.label} Hearing Loss
+                    </span>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-1">
+                    <span className="text-3xl font-black font-heading text-slate-900 dark:text-white">
+                      {rightPTA} <span className="text-sm font-semibold text-slate-400">dB HL</span>
+                    </span>
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Degree of Loss: <strong className="text-slate-800 dark:text-slate-100">{rDegree.label}</strong>
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 p-5 rounded-2xl shadow-soft space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                    Right Ear AC-PTA (0.5, 1, 2 kHz)
-                  </span>
-                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${rDegree.bg}`}>
-                    {rDegree.label} Hearing Loss
-                  </span>
+              {/* Type of Hearing Loss Breakdown Card */}
+              <DashboardCard 
+                title="Type of Hearing Loss Diagnostic Breakdown" 
+                subtitle="Classification based on Air Conduction (AC), Bone Conduction (BC), and Air-Bone Gap (ABG) criteria"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                  {/* Left Ear Classification */}
+                  <div className="p-4 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/30 space-y-3">
+                    <div className="flex justify-between items-center pb-2 border-b border-slate-200/50 dark:border-slate-800/50">
+                      <span className="text-xs font-black uppercase text-blue-600 dark:text-blue-400">
+                        Left Ear Hearing Loss Type
+                      </span>
+                      <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${lType.color}`}>
+                        {lType.code} - {lType.type}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-[11px] text-center font-bold">
+                      <div className="p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                        <span className="block text-[9px] uppercase text-slate-400 mb-0.5">AC Threshold</span>
+                        <span className="text-slate-800 dark:text-slate-200">{lType.acStatus}</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                        <span className="block text-[9px] uppercase text-slate-400 mb-0.5">BC Threshold</span>
+                        <span className="text-slate-800 dark:text-slate-200">{lType.bcStatus}</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                        <span className="block text-[9px] uppercase text-slate-400 mb-0.5">Air-Bone Gap</span>
+                        <span className="text-slate-800 dark:text-slate-200">{lType.abgStatus}</span>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed italic">
+                      "{lType.definition}"
+                    </p>
+                  </div>
+
+                  {/* Right Ear Classification */}
+                  <div className="p-4 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/30 space-y-3">
+                    <div className="flex justify-between items-center pb-2 border-b border-slate-200/50 dark:border-slate-800/50">
+                      <span className="text-xs font-black uppercase text-rose-600 dark:text-rose-400">
+                        Right Ear Hearing Loss Type
+                      </span>
+                      <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${rType.color}`}>
+                        {rType.code} - {rType.type}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-[11px] text-center font-bold">
+                      <div className="p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                        <span className="block text-[9px] uppercase text-slate-400 mb-0.5">AC Threshold</span>
+                        <span className="text-slate-800 dark:text-slate-200">{rType.acStatus}</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                        <span className="block text-[9px] uppercase text-slate-400 mb-0.5">BC Threshold</span>
+                        <span className="text-slate-800 dark:text-slate-200">{rType.bcStatus}</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                        <span className="block text-[9px] uppercase text-slate-400 mb-0.5">Air-Bone Gap</span>
+                        <span className="text-slate-800 dark:text-slate-200">{rType.abgStatus}</span>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed italic">
+                      "{rType.definition}"
+                    </p>
+                  </div>
                 </div>
-                <div className="flex items-baseline justify-between pt-1">
-                  <span className="text-3xl font-black font-heading text-slate-900 dark:text-white">
-                    {rightPTA} <span className="text-sm font-semibold text-slate-400">dB HL</span>
-                  </span>
-                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                    Degree of Loss: <strong className="text-slate-800 dark:text-slate-100">{rDegree.label}</strong>
-                  </span>
-                </div>
-              </div>
+              </DashboardCard>
             </div>
           );
         })()}
