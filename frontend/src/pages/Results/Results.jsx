@@ -481,14 +481,27 @@ export default function Results() {
 
         {/* Ear-wise AC-PTA Degree & Type of Hearing Loss Classification Section */}
         {(() => {
-          const getDegreeOfLoss = (pta) => {
+          const ageNum = parseInt(result.age, 10) || 30;
+          const isPediatric = ageNum < 18;
+
+          const getDegreeOfLoss = (pta, patientAge = ageNum) => {
             const num = parseFloat(pta);
-            if (num <= 25) return { label: 'Normal', bg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' };
-            if (num <= 40) return { label: 'Mild', bg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' };
-            if (num <= 55) return { label: 'Moderate', bg: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' };
-            if (num <= 70) return { label: 'Moderately Severe', bg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20' };
-            if (num <= 90) return { label: 'Severe', bg: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' };
-            return { label: 'Profound', bg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20' };
+            if (patientAge < 18) {
+              if (num <= 15) return { label: 'Normal', bg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20', standard: 'Pediatric Standard (<18y)' };
+              if (num <= 25) return { label: 'Slight', bg: 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20', standard: 'Pediatric Standard (<18y)' };
+              if (num <= 40) return { label: 'Mild', bg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20', standard: 'Pediatric Standard (<18y)' };
+              if (num <= 55) return { label: 'Moderate', bg: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20', standard: 'Pediatric Standard (<18y)' };
+              if (num <= 70) return { label: 'Moderately Severe', bg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20', standard: 'Pediatric Standard (<18y)' };
+              if (num <= 90) return { label: 'Severe', bg: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20', standard: 'Pediatric Standard (<18y)' };
+              return { label: 'Profound', bg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20', standard: 'Pediatric Standard (<18y)' };
+            } else {
+              if (num <= 25) return { label: 'Normal', bg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20', standard: 'Adult Goodman (1965)' };
+              if (num <= 40) return { label: 'Mild', bg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20', standard: 'Adult Goodman (1965)' };
+              if (num <= 55) return { label: 'Moderate', bg: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20', standard: 'Adult Goodman (1965)' };
+              if (num <= 70) return { label: 'Moderately Severe', bg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20', standard: 'Adult Goodman (1965)' };
+              if (num <= 90) return { label: 'Severe', bg: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20', standard: 'Adult Goodman (1965)' };
+              return { label: 'Profound', bg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20', standard: 'Adult Goodman (1965)' };
+            }
           };
 
           const getLossTypeObj = (acVal, bcVal) => {
@@ -782,6 +795,71 @@ export default function Results() {
                   </DashboardCard>
                 );
               })()}
+
+              {/* Age-Based Classification Reference Table (Goodman 1965 Adult vs Pediatric) */}
+              <DashboardCard 
+                title="Degree of Hearing Loss Classification Standards (By Patient Age)" 
+                subtitle={`Current Patient Age: ${result.age} yrs (${parseInt(result.age, 10) < 18 ? "Pediatric Classification Applied" : "Adult Goodman 1965 Standard Applied"})`}
+              >
+                <div className="overflow-x-auto mt-2 border border-slate-200/60 dark:border-slate-800/60 rounded-xl">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-extrabold uppercase text-[10px]">
+                        <th className="py-2.5 px-4">Degree of Hearing Loss</th>
+                        <th className="py-2.5 px-4 bg-blue-50/50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400">
+                          Adults (Goodman, 1965) dB HL
+                        </th>
+                        <th className="py-2.5 px-4 bg-purple-50/50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400">
+                          Children (Common Pediatric Classification) dB HL
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800/40 text-[11px] font-semibold text-slate-800 dark:text-slate-200">
+                      <tr className={parseInt(result.age, 10) >= 18 ? "bg-emerald-500/5 font-extrabold" : ""}>
+                        <td className="py-2 px-4 font-bold text-emerald-600 dark:text-emerald-400">Normal Hearing</td>
+                        <td className="py-2 px-4">0 – 25 dB</td>
+                        <td className="py-2 px-4">0 – 15 dB</td>
+                      </tr>
+                      <tr className={parseInt(result.age, 10) < 18 ? "bg-teal-500/10 font-extrabold" : ""}>
+                        <td className="py-2 px-4 font-bold text-teal-600 dark:text-teal-400 flex items-center gap-1.5">
+                          Slight Hearing Loss
+                          <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-teal-500/10 text-teal-600 border border-teal-500/20">Pediatric Specific</span>
+                        </td>
+                        <td className="py-2 px-4 text-slate-400 italic">Not specified in original Goodman</td>
+                        <td className="py-2 px-4 font-bold text-teal-600 dark:text-teal-400">16 – 25 dB</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-4 font-bold text-amber-600 dark:text-amber-400">Mild Hearing Loss</td>
+                        <td className="py-2 px-4">26 – 40 dB</td>
+                        <td className="py-2 px-4">26 – 40 dB</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-4 font-bold text-orange-600 dark:text-orange-400">Moderate Hearing Loss</td>
+                        <td className="py-2 px-4">41 – 55 dB</td>
+                        <td className="py-2 px-4">41 – 55 dB</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-4 font-bold text-rose-600 dark:text-rose-400">Moderately Severe Hearing Loss</td>
+                        <td className="py-2 px-4">56 – 70 dB</td>
+                        <td className="py-2 px-4">56 – 70 dB</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-4 font-bold text-red-600 dark:text-red-400">Severe Hearing Loss</td>
+                        <td className="py-2 px-4">71 – 90 dB</td>
+                        <td className="py-2 px-4">71 – 90 dB</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-4 font-bold text-purple-600 dark:text-purple-400">Profound Hearing Loss</td>
+                        <td className="py-2 px-4">91+ dB</td>
+                        <td className="py-2 px-4">91+ dB</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-3 leading-relaxed italic">
+                  * Note: Degree of hearing loss is calculated from the 3-Frequency Speech Pure Tone Average (PTA) at 500 Hz, 1000 Hz, and 2000 Hz. Pediatric standard includes 16–25 dB HL as "Slight Hearing Loss" due to developmental impact on speech acquisition.
+                </p>
+              </DashboardCard>
             </div>
           );
         })()}

@@ -396,13 +396,26 @@ function mockLocalPredict(patientInfo, audiogramData) {
   const maxABG = Math.max(leftABG, rightABG);
   const maxPTA = Math.max(leftPTA, rightPTA);
 
-  const getDegree = (pta) => {
-    if (pta <= 25) return "Normal";
-    if (pta <= 40) return "Mild";
-    if (pta <= 55) return "Moderate";
-    if (pta <= 70) return "Moderately Severe";
-    if (pta <= 90) return "Severe";
-    return "Profound";
+  const age = parseInt(patientInfo?.age, 10) || 30;
+
+  const getDegree = (pta, patientAge = age) => {
+    const p = parseFloat(pta);
+    if (patientAge < 18) {
+      if (p <= 15) return "Normal";
+      if (p <= 25) return "Slight";
+      if (p <= 40) return "Mild";
+      if (p <= 55) return "Moderate";
+      if (p <= 70) return "Moderately Severe";
+      if (p <= 90) return "Severe";
+      return "Profound";
+    } else {
+      if (p <= 25) return "Normal";
+      if (p <= 40) return "Mild";
+      if (p <= 55) return "Moderate";
+      if (p <= 70) return "Moderately Severe";
+      if (p <= 90) return "Severe";
+      return "Profound";
+    }
   };
 
   const leftDegree = getDegree(leftPTA);
