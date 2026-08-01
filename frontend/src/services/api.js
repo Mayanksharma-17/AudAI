@@ -378,6 +378,13 @@ export const mockApi = {
 function mockLocalPredict(patientInfo, audiogramData) {
   const leftPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20) + (audiogramData.L4000 ?? 20)) / 4;
   const rightPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20) + (audiogramData.R4000 ?? 20)) / 4;
+
+  const leftPTA_BC = ((audiogramData.L500_BC ?? 20) + (audiogramData.L1000_BC ?? 20) + (audiogramData.L2000_BC ?? 20) + (audiogramData.L4000_BC ?? 20)) / 4;
+  const rightPTA_BC = ((audiogramData.R500_BC ?? 20) + (audiogramData.R1000_BC ?? 20) + (audiogramData.R2000_BC ?? 20) + (audiogramData.R4000_BC ?? 20)) / 4;
+
+  const leftABG = leftPTA - leftPTA_BC;
+  const rightABG = rightPTA - rightPTA_BC;
+  const maxABG = Math.max(leftABG, rightABG);
   const maxPTA = Math.max(leftPTA, rightPTA);
 
   let severity = "Normal";
@@ -387,17 +394,23 @@ function mockLocalPredict(patientInfo, audiogramData) {
   else if (maxPTA > 40) severity = "Moderate";
   else if (maxPTA > 25) severity = "Mild";
 
+  let lossType = "Sensorineural";
+  if (maxABG >= 15) {
+    const minBC = Math.min(leftPTA_BC, rightPTA_BC);
+    lossType = minBC <= 25 ? "Conductive" : "Mixed";
+  }
+
   let prediction = "Normal Hearing";
-  let recommendations = ["Hearing thresholds are within normal limits."];
+  let recommendations = ["Hearing thresholds are within normal limits for both Air & Bone conduction."];
   let disability = 0.0;
 
   if (severity !== "Normal") {
-    prediction = `${severity} Hearing Loss`;
+    prediction = `${severity} ${lossType} Hearing Loss`;
     disability = Math.min(100, Math.round((maxPTA - 25) * 1.5 * 10) / 10);
     recommendations = [
-      `${severity} hearing loss detected in speech frequencies.`,
-      "Digital hearing aid evaluation recommended.",
-      "Consult ENT specialist for audiological workup."
+      `${severity} ${lossType} hearing loss detected (Air-Bone Gap: ${Math.round(maxABG)} dB).`,
+      lossType === "Conductive" ? "ENT medical/surgical evaluation recommended for middle ear conduction." : "Digital hearing aid fitting & audiological evaluation recommended.",
+      "Annual monitoring of pure tone thresholds advised."
     ];
   }
 
@@ -411,7 +424,8 @@ function mockLocalPredict(patientInfo, audiogramData) {
     prediction,
     severity,
     disability,
-    confidence: 96.5,
+    airBoneGap: Math.round(maxABG),
+    confidence: 97.3,
     data: {
       left: {
         250: audiogramData.L250 ?? 20, 500: audiogramData.L500 ?? 20, 1000: audiogramData.L1000 ?? 20,
@@ -420,6 +434,14 @@ function mockLocalPredict(patientInfo, audiogramData) {
       right: {
         250: audiogramData.R250 ?? 20, 500: audiogramData.R500 ?? 20, 1000: audiogramData.R1000 ?? 20,
         2000: audiogramData.R2000 ?? 20, 4000: audiogramData.R4000 ?? 20, 8000: audiogramData.R8000 ?? 20
+      },
+      left_bc: {
+        250: audiogramData.L250_BC ?? 20, 500: audiogramData.L500_BC ?? 20, 1000: audiogramData.L1000_BC ?? 20,
+        2000: audiogramData.L2000_BC ?? 20, 4000: audiogramData.L4000_BC ?? 20, 8000: audiogramData.L8000_BC ?? 20
+      },
+      right_bc: {
+        250: audiogramData.R250_BC ?? 20, 500: audiogramData.R500_BC ?? 20, 1000: audiogramData.R1000_BC ?? 20,
+        2000: audiogramData.R2000_BC ?? 20, 4000: audiogramData.R4000_BC ?? 20, 8000: audiogramData.R8000_BC ?? 20
       }
     },
     recommendations

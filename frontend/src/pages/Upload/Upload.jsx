@@ -28,8 +28,12 @@ export default function Upload() {
     gender: 'Male'
   });
   const [audiogramData, setAudiogramData] = useState({
+    // Air Conduction (AC)
     L250: 20, L500: 20, L1000: 20, L2000: 20, L4000: 20, L8000: 20,
-    R250: 20, R500: 20, R1000: 20, R2000: 20, R4000: 20, R8000: 20
+    R250: 20, R500: 20, R1000: 20, R2000: 20, R4000: 20, R8000: 20,
+    // Bone Conduction (BC)
+    L250_BC: 20, L500_BC: 20, L1000_BC: 20, L2000_BC: 20, L4000_BC: 20, L8000_BC: 20,
+    R250_BC: 20, R500_BC: 20, R1000_BC: 20, R2000_BC: 20, R4000_BC: 20, R8000_BC: 20
   });
 
   const [error, setError] = useState('');
@@ -438,69 +442,145 @@ export default function Upload() {
             </div>
 
             {/* Threshold Matrix Preview */}
-            <div className="md:col-span-2">
-              <DashboardCard title="Audiogram Decibel Thresholds" subtitle="Interactive decibel entry (250Hz - 8000Hz)">
-                <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
-                  <table className="w-full text-left border-collapse text-xs">
-                    <thead>
-                      <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800/40 text-slate-400 font-bold uppercase">
-                        <th className="px-4 py-3">Ear</th>
-                        {frequencies.map(f => (
-                          <th key={f} className="px-2 py-3 text-center">{f} Hz</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
-                      <tr>
-                        <td className="px-4 py-3 font-bold text-primary-600 dark:text-primary-400 flex items-center gap-1.5">
-                          <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
-                          Left Ear (L)
-                        </td>
-                        {frequencies.map(f => (
-                          <td key={f} className="px-2 py-2 text-center font-bold">
-                            <div className="flex items-center justify-center gap-1">
-                              <input
-                                type="number"
-                                min="0"
-                                max="120"
-                                value={audiogramData[`L${f}`] !== undefined ? audiogramData[`L${f}`] : 20}
-                                onChange={(e) => setAudiogramData({
-                                  ...audiogramData,
-                                  [`L${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
-                                })}
-                                className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
-                              />
-                              <span className="text-[10px] text-slate-400 font-semibold">dB</span>
-                            </div>
+            <div className="md:col-span-2 space-y-6">
+              <DashboardCard title="Audiogram Decibel Thresholds" subtitle="Air Conduction (AC) & Bone Conduction (BC) Entry (250Hz - 8000Hz)">
+                
+                {/* 1. AIR CONDUCTION (AC) TABLE */}
+                <div className="space-y-2 mb-6">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary-600 dark:text-primary-400 block">
+                    1. Air Conduction (AC) Thresholds (dB HL)
+                  </span>
+                  <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800/40 text-slate-400 font-bold uppercase">
+                          <th className="px-4 py-3">Conduction Pathway</th>
+                          {frequencies.map(f => (
+                            <th key={f} className="px-2 py-3 text-center">{f} Hz</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
+                        <tr>
+                          <td className="px-4 py-3 font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+                            Left Ear AC (L)
                           </td>
-                        ))}
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-3 font-bold text-rose-500 flex items-center gap-1.5">
-                          <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
-                          Right Ear (R)
-                        </td>
-                        {frequencies.map(f => (
-                          <td key={f} className="px-2 py-2 text-center font-bold">
-                            <div className="flex items-center justify-center gap-1">
-                              <input
-                                type="number"
-                                min="0"
-                                max="120"
-                                value={audiogramData[`R${f}`] !== undefined ? audiogramData[`R${f}`] : 20}
-                                onChange={(e) => setAudiogramData({
-                                  ...audiogramData,
-                                  [`R${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
-                                })}
-                                className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
-                              />
-                              <span className="text-[10px] text-slate-400 font-semibold">dB</span>
-                            </div>
+                          {frequencies.map(f => (
+                            <td key={f} className="px-2 py-2 text-center font-bold">
+                              <div className="flex items-center justify-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="120"
+                                  value={audiogramData[`L${f}`] !== undefined ? audiogramData[`L${f}`] : 20}
+                                  onChange={(e) => setAudiogramData({
+                                    ...audiogramData,
+                                    [`L${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                  })}
+                                  className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
+                                />
+                                <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-3 font-bold text-rose-500 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                            Right Ear AC (R)
                           </td>
-                        ))}
-                      </tr>
-                    </tbody>
-                  </table>
+                          {frequencies.map(f => (
+                            <td key={f} className="px-2 py-2 text-center font-bold">
+                              <div className="flex items-center justify-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="120"
+                                  value={audiogramData[`R${f}`] !== undefined ? audiogramData[`R${f}`] : 20}
+                                  onChange={(e) => setAudiogramData({
+                                    ...audiogramData,
+                                    [`R${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                  })}
+                                  className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
+                                />
+                                <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* 2. BONE CONDUCTION (BC) TABLE */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-secondary-600 dark:text-secondary-400 block">
+                    2. Bone Conduction (BC) Thresholds (dB HL)
+                  </span>
+                  <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800/40 text-slate-400 font-bold uppercase">
+                          <th className="px-4 py-3">Conduction Pathway</th>
+                          {frequencies.map(f => (
+                            <th key={f} className="px-2 py-3 text-center">{f} Hz</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
+                        <tr>
+                          <td className="px-4 py-3 font-bold text-indigo-500 dark:text-indigo-400 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-indigo-500" />
+                            Left Ear BC (L-BC)
+                          </td>
+                          {frequencies.map(f => (
+                            <td key={f} className="px-2 py-2 text-center font-bold">
+                              <div className="flex items-center justify-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="120"
+                                  value={audiogramData[`L${f}_BC`] !== undefined ? audiogramData[`L${f}_BC`] : 20}
+                                  onChange={(e) => setAudiogramData({
+                                    ...audiogramData,
+                                    [`L${f}_BC`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                  })}
+                                  className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-secondary-500 focus:outline-none shadow-sm"
+                                />
+                                <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-3 font-bold text-amber-500 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                            Right Ear BC (R-BC)
+                          </td>
+                          {frequencies.map(f => (
+                            <td key={f} className="px-2 py-2 text-center font-bold">
+                              <div className="flex items-center justify-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="120"
+                                  value={audiogramData[`R${f}_BC`] !== undefined ? audiogramData[`R${f}_BC`] : 20}
+                                  onChange={(e) => setAudiogramData({
+                                    ...audiogramData,
+                                    [`R${f}_BC`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                  })}
+                                  className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-secondary-500 focus:outline-none shadow-sm"
+                                />
+                                <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 
                 {/* Analyze Trigger */}
