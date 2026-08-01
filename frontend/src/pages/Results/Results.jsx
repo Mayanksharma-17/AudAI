@@ -541,6 +541,105 @@ export default function Results() {
                   </div>
                 </div>
               </DashboardCard>
+
+              {/* Speech Audiometry Battery Evaluation Card */}
+              {(() => {
+                const getWRSBadge = (wrs) => {
+                  const num = Number(wrs);
+                  if (num >= 90) return { label: 'Excellent', color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20' };
+                  if (num >= 80) return { label: 'Good', color: 'text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20' };
+                  if (num >= 70) return { label: 'Fair', color: 'text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20' };
+                  if (num >= 60) return { label: 'Poor', color: 'text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20' };
+                  return { label: 'Very Poor', color: 'text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20' };
+                };
+
+                const lSRT = result.data.speech?.left?.srt ?? Math.round(parseFloat(leftPTA));
+                const lSDT = result.data.speech?.left?.sdt ?? Math.round(lSRT - 6);
+                const lWRS = result.data.speech?.left?.wrs ?? 96;
+
+                const rSRT = result.data.speech?.right?.srt ?? Math.round(parseFloat(rightPTA));
+                const rSDT = result.data.speech?.right?.sdt ?? Math.round(rSRT - 6);
+                const rWRS = result.data.speech?.right?.wrs ?? 96;
+
+                const lWRSBadge = getWRSBadge(lWRS);
+                const rWRSBadge = getWRSBadge(rWRS);
+
+                const lDiff = Math.abs(lSRT - parseFloat(leftPTA));
+                const rDiff = Math.abs(rSRT - parseFloat(rightPTA));
+
+                return (
+                  <DashboardCard 
+                    title="Speech Audiometry Battery Evaluation" 
+                    subtitle="Functional Speech Recognition Threshold (SRT), Detection (SDT), and Discrimination (WRS %)"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                      {/* Left Ear Speech */}
+                      <div className="p-4 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/30 space-y-3">
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-200/50 dark:border-slate-800/50">
+                          <span className="text-xs font-black uppercase text-blue-600 dark:text-blue-400">
+                            Left Ear Speech Battery
+                          </span>
+                          <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${lWRSBadge.color}`}>
+                            {lWRSBadge.label} WRS ({lWRS}%)
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 text-center font-bold">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                            <span className="block text-[9px] uppercase text-slate-400 mb-0.5">SRT</span>
+                            <span className="text-base text-slate-900 dark:text-slate-100">{lSRT} dB</span>
+                          </div>
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                            <span className="block text-[9px] uppercase text-slate-400 mb-0.5">SDT</span>
+                            <span className="text-base text-slate-900 dark:text-slate-100">{lSDT} dB</span>
+                          </div>
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                            <span className="block text-[9px] uppercase text-slate-400 mb-0.5">WRS %</span>
+                            <span className="text-base text-emerald-600 dark:text-emerald-400">{lWRS}%</span>
+                          </div>
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center pt-1 border-t border-slate-200/30 dark:border-slate-800/30">
+                          <span>PTA-SRT Cross Agreement:</span>
+                          <span className={`font-bold ${lDiff <= 6 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                            {lDiff <= 6 ? '🟢 Good' : '🟡 Marginal'} ({lDiff.toFixed(1)} dB diff)
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Right Ear Speech */}
+                      <div className="p-4 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/30 space-y-3">
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-200/50 dark:border-slate-800/50">
+                          <span className="text-xs font-black uppercase text-rose-600 dark:text-rose-400">
+                            Right Ear Speech Battery
+                          </span>
+                          <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${rWRSBadge.color}`}>
+                            {rWRSBadge.label} WRS ({rWRS}%)
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 text-center font-bold">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                            <span className="block text-[9px] uppercase text-slate-400 mb-0.5">SRT</span>
+                            <span className="text-base text-slate-900 dark:text-slate-100">{rSRT} dB</span>
+                          </div>
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                            <span className="block text-[9px] uppercase text-slate-400 mb-0.5">SDT</span>
+                            <span className="text-base text-slate-900 dark:text-slate-100">{rSDT} dB</span>
+                          </div>
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                            <span className="block text-[9px] uppercase text-slate-400 mb-0.5">WRS %</span>
+                            <span className="text-base text-emerald-600 dark:text-emerald-400">{rWRS}%</span>
+                          </div>
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center pt-1 border-t border-slate-200/30 dark:border-slate-800/30">
+                          <span>PTA-SRT Cross Agreement:</span>
+                          <span className={`font-bold ${rDiff <= 6 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                            {rDiff <= 6 ? '🟢 Good' : '🟡 Marginal'} ({rDiff.toFixed(1)} dB diff)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </DashboardCard>
+                );
+              })()}
             </div>
           );
         })()}

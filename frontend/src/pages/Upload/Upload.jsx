@@ -33,7 +33,10 @@ export default function Upload() {
     R250: 20, R500: 20, R1000: 20, R2000: 20, R4000: 20, R8000: 20,
     // Bone Conduction (BC)
     L250_BC: 20, L500_BC: 20, L1000_BC: 20, L2000_BC: 20, L4000_BC: 20, L8000_BC: 20,
-    R250_BC: 20, R500_BC: 20, R1000_BC: 20, R2000_BC: 20, R4000_BC: 20, R8000_BC: 20
+    R250_BC: 20, R500_BC: 20, R1000_BC: 20, R2000_BC: 20, R4000_BC: 20, R8000_BC: 20,
+    // Speech Audiometry
+    L_SRT: 20, L_SDT: 15, L_WRS: 96,
+    R_SRT: 20, R_SDT: 15, R_WRS: 96
   });
 
   const [error, setError] = useState('');
@@ -674,6 +677,168 @@ export default function Upload() {
                               </div>
                             </td>
                           ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* SPEECH AUDIOMETRY BATTERY TABLE (SRT, SDT, WRS %) */}
+                <div className="space-y-2 mt-6">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 block">
+                      Speech Audiometry Battery (SRT, SDT, WRS %)
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400">
+                      ★ SRT vs Speech PTA Cross-Validation (|SRT - PTA| ≤ 6 dB)
+                    </span>
+                  </div>
+                  <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800/40 text-slate-400 font-bold uppercase">
+                          <th className="px-4 py-3">Ear Side</th>
+                          <th className="px-3 py-3 text-center">Speech Recognition Threshold (SRT)</th>
+                          <th className="px-3 py-3 text-center">Speech Detection Threshold (SDT)</th>
+                          <th className="px-3 py-3 text-center">Word Recognition Score (WRS %)</th>
+                          <th className="px-3 py-3 text-center">PTA vs SRT Agreement</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40 font-bold">
+                        {/* Left Ear */}
+                        <tr>
+                          <td className="px-4 py-3 text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+                            Left Ear Speech
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="120"
+                                value={audiogramData.L_SRT !== undefined ? audiogramData.L_SRT : ""}
+                                onChange={(e) => {
+                                  const raw = e.target.value;
+                                  const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                  setAudiogramData({ ...audiogramData, L_SRT: val });
+                                }}
+                                className="w-16 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-lg focus:ring-2 focus:ring-primary-500 font-bold text-xs"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">dB HL</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="120"
+                                value={audiogramData.L_SDT !== undefined ? audiogramData.L_SDT : ""}
+                                onChange={(e) => {
+                                  const raw = e.target.value;
+                                  const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                  setAudiogramData({ ...audiogramData, L_SDT: val });
+                                }}
+                                className="w-16 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-lg focus:ring-2 focus:ring-primary-500 font-bold text-xs"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">dB HL</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                value={audiogramData.L_WRS !== undefined ? audiogramData.L_WRS : ""}
+                                onChange={(e) => {
+                                  const raw = e.target.value;
+                                  const val = raw === "" ? "" : Math.max(0, Math.min(100, parseInt(raw, 10) || 0));
+                                  setAudiogramData({ ...audiogramData, L_WRS: val });
+                                }}
+                                className="w-16 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-lg focus:ring-2 focus:ring-primary-500 font-bold text-xs"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">%</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            {(() => {
+                              const lPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20)) / 3;
+                              const diff = Math.abs((audiogramData.L_SRT ?? 20) - lPTA);
+                              if (diff <= 6) return <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">🟢 Good ({diff.toFixed(1)} dB)</span>;
+                              if (diff <= 10) return <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">🟡 Fair ({diff.toFixed(1)} dB)</span>;
+                              return <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20">🔴 Poor ({diff.toFixed(1)} dB)</span>;
+                            })()}
+                          </td>
+                        </tr>
+
+                        {/* Right Ear */}
+                        <tr>
+                          <td className="px-4 py-3 text-rose-500 flex items-center gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                            Right Ear Speech
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="120"
+                                value={audiogramData.R_SRT !== undefined ? audiogramData.R_SRT : ""}
+                                onChange={(e) => {
+                                  const raw = e.target.value;
+                                  const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                  setAudiogramData({ ...audiogramData, R_SRT: val });
+                                }}
+                                className="w-16 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-lg focus:ring-2 focus:ring-primary-500 font-bold text-xs"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">dB HL</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="120"
+                                value={audiogramData.R_SDT !== undefined ? audiogramData.R_SDT : ""}
+                                onChange={(e) => {
+                                  const raw = e.target.value;
+                                  const val = raw === "" ? "" : Math.max(0, Math.min(120, parseInt(raw, 10) || 0));
+                                  setAudiogramData({ ...audiogramData, R_SDT: val });
+                                }}
+                                className="w-16 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-lg focus:ring-2 focus:ring-primary-500 font-bold text-xs"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">dB HL</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                value={audiogramData.R_WRS !== undefined ? audiogramData.R_WRS : ""}
+                                onChange={(e) => {
+                                  const raw = e.target.value;
+                                  const val = raw === "" ? "" : Math.max(0, Math.min(100, parseInt(raw, 10) || 0));
+                                  setAudiogramData({ ...audiogramData, R_WRS: val });
+                                }}
+                                className="w-16 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-lg focus:ring-2 focus:ring-primary-500 font-bold text-xs"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">%</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            {(() => {
+                              const rPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20)) / 3;
+                              const diff = Math.abs((audiogramData.R_SRT ?? 20) - rPTA);
+                              if (diff <= 6) return <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">🟢 Good ({diff.toFixed(1)} dB)</span>;
+                              if (diff <= 10) return <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">🟡 Fair ({diff.toFixed(1)} dB)</span>;
+                              return <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20">🔴 Poor ({diff.toFixed(1)} dB)</span>;
+                            })()}
+                          </td>
                         </tr>
                       </tbody>
                     </table>

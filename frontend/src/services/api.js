@@ -458,6 +458,18 @@ function mockLocalPredict(patientInfo, audiogramData) {
       right_bc: {
         250: audiogramData.R250_BC ?? 20, 500: audiogramData.R500_BC ?? 20, 1000: audiogramData.R1000_BC ?? 20,
         2000: audiogramData.R2000_BC ?? 20, 4000: audiogramData.R4000_BC ?? 20, 8000: audiogramData.R8000_BC ?? 20
+      },
+      speech: {
+        left: {
+          srt: audiogramData.L_SRT ?? Math.round(leftPTA),
+          sdt: audiogramData.L_SDT ?? Math.round(leftPTA - 6),
+          wrs: audiogramData.L_WRS ?? 96
+        },
+        right: {
+          srt: audiogramData.R_SRT ?? Math.round(rightPTA),
+          sdt: audiogramData.R_SDT ?? Math.round(rightPTA - 6),
+          wrs: audiogramData.R_WRS ?? 96
+        }
       }
     },
     recommendations
