@@ -1,8 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Brain, FileText, Activity, Cpu, Award, Zap, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Shield, 
+  Brain, 
+  FileText, 
+  Activity, 
+  Cpu, 
+  Award, 
+  Zap, 
+  CheckCircle2,
+  Globe2,
+  HeartPulse,
+  Stethoscope,
+  TrendingUp,
+  Users,
+  Clock,
+  BarChart3
+} from 'lucide-react';
 
 export default function Landing() {
+  const [activeImpactTab, setActiveImpactTab] = useState('global');
+
+  const impactData = {
+    global: {
+      title: "Global Hearing Health Need",
+      badge: "World Health Organization (WHO) Data",
+      description: "Hearing loss is a growing global health priority affecting over 20% of the world's population.",
+      stats: [
+        { value: "1.5 Billion", label: "People affected globally", detail: "Over 20% of the world population lives with hearing loss today." },
+        { value: "430 Million+", label: "Require clinical care", detail: "Individuals living with moderate to profound disabling hearing loss." },
+        { value: "2.5 Billion", label: "Projected by 2050", detail: "Expected individuals with hearing impairment without early interventions." }
+      ],
+      takeaway: "Traditional audiology infrastructure cannot scale quickly enough to meet the surging global demand for hearing diagnostics."
+    },
+    societal: {
+      title: "Societal & Economic Impact",
+      badge: "Health Equity & Accessibility",
+      description: "Automating audiology workflows democratizes early detection and breaks regional healthcare barriers.",
+      stats: [
+        { value: "$980 Billion", label: "Annual Global Cost", detail: "Economic cost of unaddressed hearing loss in lost productivity & healthcare." },
+        { value: "80%", label: "In Developing Regions", detail: "Of people with disabling hearing loss reside in underserved regions with ENT shortages." },
+        { value: "< 1 Second", label: "Instant AI Diagnostic", detail: "Reduces clinical assessment latency from days to milliseconds per patient." }
+      ],
+      takeaway: "AudAI enables rapid screening, rapid statutory disability certification, and equitable access to hearing rehabilitation."
+    },
+    audiologist: {
+      title: "Empowering Audiologists",
+      badge: "Clinical Decision Support System",
+      description: "AI assists clinicians by automating tedious threshold calculations and standardizing diagnosis.",
+      stats: [
+        { value: "97.3%", label: "Classification Accuracy", detail: "Multi-frequency Random Forest model trained on 250Hz–8000Hz PTA data." },
+        { value: "100%", label: "WHO & Statutory Math", detail: "Automated monoaural & bilateral impairment calculations without human error." },
+        { value: "10x", label: "Faster Patient Processing", detail: "Frees up valuable time for hearing aid fitting, counseling & therapy." }
+      ],
+      takeaway: "Clinicians are augmented, not replaced—enabling better diagnostic precision and higher patient throughput."
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 flex flex-col justify-between scroll-smooth">
       {/* Navigation Header */}
@@ -12,6 +67,7 @@ export default function Landing() {
           <span className="text-xl font-bold tracking-tight font-heading">Aud<span className="text-secondary-500">AI</span></span>
         </div>
         <nav className="hidden md:flex space-x-8 text-sm font-medium">
+          <a href="#impact" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Global Impact</a>
           <a href="#features" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Features</a>
           <a href="#technology" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Technology</a>
           <a href="#about" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">About</a>
@@ -43,6 +99,107 @@ export default function Landing() {
             Get Started
           </Link>
         </div>
+
+        {/* INTERACTIVE GLOBAL IMPACT & SOCIETAL NEED SECTION */}
+        <section id="impact" className="scroll-mt-24 pt-24 text-left w-full">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-widest block mb-2">
+              GLOBAL HEALTH & CLINICAL PERSPECTIVE
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold font-heading tracking-tight mb-3">
+              Why AudAI Matters: Real-World Impact
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Understanding the global magnitude of hearing impairment and how AI transforms patient care.
+            </p>
+          </div>
+
+          {/* Interactive Tab Selector Buttons */}
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <button
+              onClick={() => setActiveImpactTab('global')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
+                activeImpactTab === 'global'
+                  ? 'bg-primary-600 text-white shadow-md shadow-primary-500/20 scale-[1.02]'
+                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+              }`}
+            >
+              <Globe2 className="h-4 w-4" />
+              1. Global Crisis (WHO Data)
+            </button>
+            <button
+              onClick={() => setActiveImpactTab('societal')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
+                activeImpactTab === 'societal'
+                  ? 'bg-primary-600 text-white shadow-md shadow-primary-500/20 scale-[1.02]'
+                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+              }`}
+            >
+              <HeartPulse className="h-4 w-4" />
+              2. Societal & Economic Reach
+            </button>
+            <button
+              onClick={() => setActiveImpactTab('audiologist')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
+                activeImpactTab === 'audiologist'
+                  ? 'bg-primary-600 text-white shadow-md shadow-primary-500/20 scale-[1.02]'
+                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+              }`}
+            >
+              <Stethoscope className="h-4 w-4" />
+              3. Audiologist Empowerment
+            </button>
+          </div>
+
+          {/* Interactive Content Card */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeImpactTab}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.25 }}
+              className="bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 p-8 rounded-3xl shadow-soft"
+            >
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
+                <div>
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/40 px-3 py-1 rounded-full border border-primary-200/30">
+                    {impactData[activeImpactTab].badge}
+                  </span>
+                  <h3 className="text-2xl font-extrabold font-heading text-slate-900 dark:text-white mt-2">
+                    {impactData[activeImpactTab].title}
+                  </h3>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md">
+                  {impactData[activeImpactTab].description}
+                </p>
+              </div>
+
+              {/* 3 Stat Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+                {impactData[activeImpactTab].stats.map((stat, idx) => (
+                  <div key={idx} className="p-5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/50 border border-slate-200/40 dark:border-slate-800/40 space-y-2">
+                    <span className="text-3xl font-black font-heading gradient-text block">
+                      {stat.value}
+                    </span>
+                    <h4 className="font-bold text-xs text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+                      {stat.label}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                      {stat.detail}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Takeaway bar */}
+              <div className="p-4 rounded-xl bg-primary-50/50 dark:bg-primary-950/20 border border-primary-200/20 flex items-start gap-3 text-xs text-primary-700 dark:text-primary-300 font-semibold">
+                <CheckCircle2 className="h-4 w-4 text-primary-500 shrink-0 mt-0.5" />
+                <p>{impactData[activeImpactTab].takeaway}</p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </section>
 
         {/* Feature Section */}
         <section id="features" className="scroll-mt-24 pt-20 text-left w-full">
