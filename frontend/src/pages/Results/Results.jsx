@@ -52,12 +52,12 @@ export default function Results() {
   }
 
   const audiogramChartData = [
-    { frequency: '250', Left: result.data.left[250], Right: result.data.right[250] },
-    { frequency: '500', Left: result.data.left[500], Right: result.data.right[500] },
-    { frequency: '1000', Left: result.data.left[1000], Right: result.data.right[1000] },
-    { frequency: '2000', Left: result.data.left[2000], Right: result.data.right[2000] },
-    { frequency: '4000', Left: result.data.left[4000], Right: result.data.right[4000] },
-    { frequency: '8000', Left: result.data.left[8000], Right: result.data.right[8000] }
+    { frequency: '250', Left: result.data.left[250], Right: result.data.right[250], Left_BC: result.data.left_bc?.[250] ?? null, Right_BC: result.data.right_bc?.[250] ?? null },
+    { frequency: '500', Left: result.data.left[500], Right: result.data.right[500], Left_BC: result.data.left_bc?.[500] ?? null, Right_BC: result.data.right_bc?.[500] ?? null },
+    { frequency: '1000', Left: result.data.left[1000], Right: result.data.right[1000], Left_BC: result.data.left_bc?.[1000] ?? null, Right_BC: result.data.right_bc?.[1000] ?? null },
+    { frequency: '2000', Left: result.data.left[2000], Right: result.data.right[2000], Left_BC: result.data.left_bc?.[2000] ?? null, Right_BC: result.data.right_bc?.[2000] ?? null },
+    { frequency: '4000', Left: result.data.left[4000], Right: result.data.right[4000], Left_BC: result.data.left_bc?.[4000] ?? null, Right_BC: result.data.right_bc?.[4000] ?? null },
+    { frequency: '8000', Left: result.data.left[8000], Right: result.data.right[8000], Left_BC: null, Right_BC: null }
   ];
 
   const featureWeights = [
@@ -89,6 +89,24 @@ export default function Results() {
       <svg x={cx - 6} y={cy - 6} width="12" height="12" viewBox="0 0 12 12">
         <circle cx="6" cy="6" r="4.5" fill="none" stroke="#e11d48" strokeWidth="2.5" />
       </svg>
+    );
+  const CustomRightBCDot = (props) => {
+    const { cx, cy } = props;
+    if (cx === undefined || cy === undefined) return null;
+    return (
+      <text x={cx} y={cy + 4} textAnchor="middle" fill="#d97706" fontSize="13" fontWeight="900">
+        &lt;
+      </text>
+    );
+  };
+
+  const CustomLeftBCDot = (props) => {
+    const { cx, cy } = props;
+    if (cx === undefined || cy === undefined) return null;
+    return (
+      <text x={cx} y={cy + 4} textAnchor="middle" fill="#4f46e5" fontSize="13" fontWeight="900">
+        &gt;
+      </text>
     );
   };
 
@@ -477,9 +495,9 @@ export default function Results() {
               title="Interactive Audiogram Visualizer" 
               subtitle="Frequency (Hz) vs Hearing Level (dB HL). Note: Reversed Y-axis represents clinical standard."
             >
-              <div className="h-[350px] w-full mt-4">
+              <div className="h-[380px] w-[380px] max-w-full mx-auto mt-4 p-2 bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl shadow-sm">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={audiogramChartData} margin={{ top: 20, right: 30, left: -20, bottom: 5 }}>
+                  <LineChart data={audiogramChartData} margin={{ top: 20, right: 25, left: -20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-800" />
                     <XAxis dataKey="frequency" stroke="#94a3b8" fontSize={11} tickLine={false} />
                     <YAxis 
@@ -499,13 +517,15 @@ export default function Results() {
                         boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
                         color: '#f8fafc'
                       }} 
-                      formatter={(value) => [`${value} dB HL`]}
+                      formatter={(value) => value !== null ? [`${value} dB HL`] : ['N/A']}
                     />
-                    <Legend verticalAlign="top" height={36} iconSize={12} wrapperStyle={{ fontSize: 11, fontWeight: 600 }} />
+                    <Legend verticalAlign="top" height={36} iconSize={12} wrapperStyle={{ fontSize: 10, fontWeight: 700 }} />
+                    
+                    {/* Air Conduction Lines */}
                     <Line 
                       type="monotone" 
                       dataKey="Left" 
-                      name="Left Ear (X - Blue)" 
+                      name="Left Ear AC (X)" 
                       stroke="#2563eb" 
                       strokeWidth={2.5} 
                       strokeDasharray="5 5" 
@@ -515,11 +535,33 @@ export default function Results() {
                     <Line 
                       type="monotone" 
                       dataKey="Right" 
-                      name="Right Ear (O - Red)" 
+                      name="Right Ear AC (O)" 
                       stroke="#e11d48" 
                       strokeWidth={2.5} 
                       dot={<CustomRightDot />} 
                       activeDot={{ r: 6 }} 
+                    />
+
+                    {/* Bone Conduction Lines */}
+                    <Line 
+                      type="monotone" 
+                      dataKey="Right_BC" 
+                      name="Right Ear BC (<)" 
+                      stroke="#d97706" 
+                      strokeWidth={2} 
+                      strokeDasharray="3 3"
+                      connectNulls={true}
+                      dot={<CustomRightBCDot />} 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="Left_BC" 
+                      name="Left Ear BC (>)" 
+                      stroke="#4f46e5" 
+                      strokeWidth={2} 
+                      strokeDasharray="3 3"
+                      connectNulls={true}
+                      dot={<CustomLeftBCDot />} 
                     />
                   </LineChart>
                 </ResponsiveContainer>
