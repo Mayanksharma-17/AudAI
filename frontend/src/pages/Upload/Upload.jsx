@@ -205,7 +205,10 @@ export default function Upload() {
   };
 
   const handleAnalyze = async () => {
-    if (!file || !parsedData) return;
+    if (!audiogramData) {
+      setError("Please specify audiogram decibel thresholds before running diagnostics.");
+      return;
+    }
     
     setIsAnalyzing(true);
     setLoadingStep(0);
@@ -219,7 +222,7 @@ export default function Upload() {
           return prev;
         }
       });
-    }, 900);
+    }, 800);
 
     try {
       const result = await mockApi.predict(patientInfo, audiogramData);
@@ -227,7 +230,7 @@ export default function Upload() {
       setTimeout(() => {
         setIsAnalyzing(false);
         navigate('/results', { state: { result } });
-      }, 500);
+      }, 400);
     } catch (err) {
       clearInterval(interval);
       setError("AI analysis failed. Please verify the credentials and audiogram data.");
