@@ -337,30 +337,48 @@ export default function Upload() {
           <p className="text-xs text-slate-400 max-w-xs mb-4">
             Supports clinical PTA CSV files exports from standard audiometer machinery.
           </p>
-          <button 
-            type="button" 
-            className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-bold text-xs rounded-xl shadow-md transition-transform hover:scale-[1.02]"
-          >
-            Browse Workspace File
-          </button>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button 
+              type="button" 
+              className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-bold text-xs rounded-xl shadow-md transition-transform hover:scale-[1.02]"
+            >
+              Browse Workspace File
+            </button>
+            <button 
+              type="button" 
+              onClick={(e) => {
+                e.stopPropagation();
+                setFile({ name: "Manual_Clinical_Entry.csv", type: "text/csv", size: 512 });
+                setPatientInfo({
+                  patientId: `P-${Math.floor(1000 + Math.random() * 9000)}`,
+                  name: "Patient Entry",
+                  age: "42",
+                  gender: "Male"
+                });
+              }}
+              className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs rounded-xl shadow-md transition-transform hover:scale-[1.02]"
+            >
+              ✏️ Manual Threshold Entry
+            </button>
+          </div>
         </div>
       ) : (
         /* Selected File Overview & CSV Previews */
         <div className="space-y-6">
           <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 p-4 rounded-xl flex items-center justify-between shadow-soft">
-            <div className="flex items-center space-x-3 truncate">
-              <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-950/20 flex items-center justify-center text-primary-600 dark:text-primary-400">
+            <div className="flex items-center space-x-3">
+              <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200/30 flex items-center justify-center text-primary-600 dark:text-primary-400">
                 <FileText className="h-5 w-5" />
               </div>
-              <div className="text-left truncate">
-                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">{file.name}</h4>
-                <p className="text-[10px] text-slate-400">{(file.size / 1024).toFixed(1)} KB &bull; Verified CSV</p>
+              <div>
+                <h4 className="font-bold text-xs text-slate-800 dark:text-slate-200">{file.name}</h4>
+                <p className="text-[10px] text-slate-400">Ready for clinical threshold editing & AI diagnosis</p>
               </div>
             </div>
             <button
               onClick={handleRemoveFile}
-              className="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
-              title="Remove file"
+              className="p-2 text-slate-400 hover:text-rose-500 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title="Remove File"
             >
               <Trash2 className="h-4 w-4" />
             </button>
@@ -416,16 +434,16 @@ export default function Upload() {
               </DashboardCard>
             </div>
 
-            {/* Threshold Previews */}
+            {/* Threshold Matrix Preview */}
             <div className="md:col-span-2">
-              <DashboardCard title="Audiogram Decibel Thresholds" subtitle="dB HL values extracted from CSV (250Hz - 8000Hz)">
+              <DashboardCard title="Audiogram Decibel Thresholds" subtitle="Interactive decibel entry (250Hz - 8000Hz)">
                 <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
                       <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800/40 text-slate-400 font-bold uppercase">
                         <th className="px-4 py-3">Ear</th>
                         {frequencies.map(f => (
-                          <th key={f} className="px-4 py-3 text-center">{f} Hz</th>
+                          <th key={f} className="px-2 py-3 text-center">{f} Hz</th>
                         ))}
                       </tr>
                     </thead>
@@ -436,8 +454,21 @@ export default function Upload() {
                           Left Ear (L)
                         </td>
                         {frequencies.map(f => (
-                          <td key={f} className="px-4 py-3 text-center font-bold">
-                            {audiogramData[`L${f}`]} dB
+                          <td key={f} className="px-2 py-2 text-center font-bold">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="120"
+                                value={audiogramData[`L${f}`] !== undefined ? audiogramData[`L${f}`] : 20}
+                                onChange={(e) => setAudiogramData({
+                                  ...audiogramData,
+                                  [`L${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                })}
+                                className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                            </div>
                           </td>
                         ))}
                       </tr>
@@ -447,8 +478,21 @@ export default function Upload() {
                           Right Ear (R)
                         </td>
                         {frequencies.map(f => (
-                          <td key={f} className="px-4 py-3 text-center font-bold">
-                            {audiogramData[`R${f}`]} dB
+                          <td key={f} className="px-2 py-2 text-center font-bold">
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                min="0"
+                                max="120"
+                                value={audiogramData[`R${f}`] !== undefined ? audiogramData[`R${f}`] : 20}
+                                onChange={(e) => setAudiogramData({
+                                  ...audiogramData,
+                                  [`R${f}`]: Math.max(0, Math.min(120, parseInt(e.target.value) || 0))
+                                })}
+                                className="w-14 text-center py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-bold text-xs rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none shadow-sm"
+                              />
+                              <span className="text-[10px] text-slate-400 font-semibold">dB</span>
+                            </div>
                           </td>
                         ))}
                       </tr>
