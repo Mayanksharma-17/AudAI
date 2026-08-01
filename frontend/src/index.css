@@ -212,7 +212,7 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 8mm 10mm 8mm 10mm;
+    margin: 10mm 12mm;
   }
   
   html, body, #root {
@@ -235,8 +235,14 @@
     display: block !important;
   }
 
-  .print\:block > div {
-    page-break-inside: avoid;
+  .page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .page-break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
 

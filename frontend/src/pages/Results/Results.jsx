@@ -380,7 +380,20 @@ export default function Results() {
           })()}
         </div>
 
-        {/* Diagnostic Breakdown Summary Table (Degree, Type, ABG, SRT/SDT/WRS & PTA-SDT Correlation) */}
+        {/* PAGE 2: Comprehensive Diagnostic Classification, Recommendations & Sign-Off */}
+        <div className="page-break-before pt-2" style={{ pageBreakBefore: 'always', breakBefore: 'page' }}>
+          {/* Page 2 Continuation Header */}
+          <div className="border-b border-slate-300 pb-2 mb-3 flex justify-between items-center text-[10px]">
+            <div>
+              <span className="font-extrabold text-slate-900 uppercase">AUDAI CLINICAL REPORT (PAGE 2 OF 2)</span>
+              <span className="text-slate-500 ml-2">&bull; Patient: <strong>{result.patientName}</strong> ({result.patientId})</span>
+            </div>
+            <div className="text-right text-slate-500 font-mono">
+              Report ID: {result.id} &bull; Date: {new Date(result.date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}
+            </div>
+          </div>
+
+          {/* Diagnostic Breakdown Summary Table (Degree, Type, ABG, SRT/SDT/WRS & PTA-SDT Correlation) */}
         {(() => {
           const getDegreeOfLoss = (pta) => {
             const num = parseFloat(pta);
@@ -532,6 +545,7 @@ export default function Results() {
           </div>
         </div>
       </div>
+    </div>
 
       {/* ========================================================================= */}
       {/* 2. INTERACTIVE WEB APP VIEW (Hidden during print) */}
