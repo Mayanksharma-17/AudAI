@@ -124,7 +124,7 @@ export default function Navbar({ toggleSidebar }) {
             initial={{ opacity: 0, y: -40, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="fixed top-4 right-6 z-50 max-w-sm w-full bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl border border-slate-700 flex items-start gap-3"
+            className="fixed top-4 right-6 z-50 max-w-sm w-full bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl border border-slate-700 flex items-start gap-3 print:hidden no-print"
           >
             <div className="p-2 rounded-xl bg-primary-500/20 text-primary-400 shrink-0">
               <Sparkles className="h-5 w-5 animate-pulse" />

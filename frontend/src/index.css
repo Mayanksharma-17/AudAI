@@ -177,3 +177,36 @@
     rgba(255, 255, 255, 0) 100%
   );
 }
+
+/* Print & PDF Export Professional Clinical Formatting */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm 8mm 10mm;
+  }
+  
+  html, body, #root {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide all web application chrome, navbars, sidebars, toasts, search inputs, and buttons */
+  header, nav, footer, sidebar, aside, button, .toast-notification, .no-print, .print\:hidden {
+    display: none !important;
+  }
+
+  /* Force display printable clinical report view */
+  .print\:block {
+    display: block !important;
+  }
+
+  .print\:block > div {
+    page-break-inside: avoid;
+  }
+}
+

@@ -226,7 +226,33 @@ def generate_pdf_report(analysis_dict: dict, patient_info: dict = None) -> bytes
         elements.append(Paragraph(f"• {r}.", bullet_style))
         elements.append(Spacer(1, 3))
 
-    elements.append(Spacer(1, 16))
+    elements.append(Spacer(1, 10))
+
+    # 5.5 Prevention & Precautions (Hearing Conservation)
+    elements.append(Paragraph("Hearing Conservation & Preventive Care Guidelines", section_heading))
+    
+    prev_data = [
+        [
+            Paragraph("<b>1. Noise Protection:</b> Use certified ear protection in environments exceeding 85 dBA.", bullet_style),
+            Paragraph("<b>2. Safe Audio (60/60 Rule):</b> Keep headphone volume <60% and limit sessions to 60 mins.", bullet_style)
+        ],
+        [
+            Paragraph("<b>3. Ototoxic Guard:</b> Consult ENT before taking aminoglycosides or high-dose NSAIDs.", bullet_style),
+            Paragraph("<b>4. Ear Canal Hygiene:</b> Never insert cotton swabs into ear canals. Schedule annual checks.", bullet_style)
+        ]
+    ]
+    prev_table = Table(prev_data, colWidths=[3.5*inch, 3.5*inch])
+    prev_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), BG_LIGHT),
+        ('BOX', (0,0), (-1,-1), 0.5, BORDER_COLOR),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, BORDER_COLOR),
+        ('TOPPADDING', (0,0), (-1,-1), 4),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
+    ]))
+    elements.append(prev_table)
+    elements.append(Spacer(1, 12))
 
     # 6. Sign-off Footer
     elements.append(HRFlowable(width="100%", thickness=0.8, color=BORDER_COLOR, spaceBefore=8, spaceAfter=12))
