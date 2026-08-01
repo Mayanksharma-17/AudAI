@@ -166,7 +166,7 @@ export default function Navbar({ toggleSidebar }) {
           <input
             type="text"
             placeholder="Search patient, records..."
-            className="w-full pl-9 pr-4 py-1.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-xs transition-all"
+            className="w-full pl-9 pr-4 py-1.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm placeholder-slate-400 dark:placeholder-slate-500"
           />
         </div>
 

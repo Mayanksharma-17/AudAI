@@ -146,7 +146,7 @@ export default function Settings() {
               <select
                 value={settings.autoLogout}
                 onChange={(e) => setSettings({ ...settings, autoLogout: e.target.value })}
-                className="pl-3 pr-8 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 rounded-xl focus:bg-white text-xs font-bold focus:outline-none"
+                className="px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm"
               >
                 <option value="5">5 Minutes</option>
                 <option value="15">15 Minutes</option>

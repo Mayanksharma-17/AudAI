@@ -372,43 +372,43 @@ export default function Upload() {
               <DashboardCard title="Patient Profile">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Patient ID</label>
+                    <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Patient ID</label>
                     <input
                       type="text"
                       value={patientInfo.patientId}
                       onChange={(e) => setPatientInfo({ ...patientInfo, patientId: e.target.value })}
-                      className="w-full pl-3 pr-3 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
+                      className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-xl focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Patient Name</label>
+                    <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Patient Name</label>
                     <input
                       type="text"
                       value={patientInfo.name}
                       onChange={(e) => setPatientInfo({ ...patientInfo, name: e.target.value })}
-                      className="w-full pl-3 pr-3 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
+                      className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-xl focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Age</label>
+                      <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Age</label>
                       <input
                         type="number"
                         value={patientInfo.age}
                         onChange={(e) => setPatientInfo({ ...patientInfo, age: e.target.value })}
-                        className="w-full pl-3 pr-3 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
+                        className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-xl focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Gender</label>
+                      <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Gender</label>
                       <select
                         value={patientInfo.gender}
                         onChange={(e) => setPatientInfo({ ...patientInfo, gender: e.target.value })}
-                        className="w-full pl-3 pr-3 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-xs font-semibold transition-all"
+                        className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 rounded-xl focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm"
                       >
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
                   </div>

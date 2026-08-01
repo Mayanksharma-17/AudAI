@@ -50,6 +50,36 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight font-bold;
   }
+
+  /* Global Input & Form Dark Mode High-Contrast Rules */
+  input, select, textarea {
+    @apply bg-white text-slate-900 border-slate-300 dark:bg-slate-950 dark:text-slate-50 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-500 font-semibold;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-50 border-primary-500 dark:border-primary-500 ring-2 ring-primary-500/30 outline-none;
+  }
+
+  /* Webkit Autofill fix for Dark Mode */
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark textarea:-webkit-autofill,
+  .dark textarea:-webkit-autofill:hover,
+  .dark textarea:-webkit-autofill:focus,
+  .dark select:-webkit-autofill,
+  .dark select:-webkit-autofill:hover,
+  .dark select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #020817 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* Select Option Dropdown items styling in Dark Mode */
+  .dark select option {
+    background-color: #090d16 !important;
+    color: #ffffff !important;
+  }
 }
 
 /* Stunning Gradient Text Utilities */

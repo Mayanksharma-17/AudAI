@@ -114,7 +114,7 @@ export default function History() {
               setSearchQuery(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-xs font-semibold transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm placeholder-slate-400 dark:placeholder-slate-500"
           />
         </div>
 
@@ -126,7 +126,7 @@ export default function History() {
               setSelectedSeverity(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-3 pr-8 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none text-xs font-bold"
+            className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm"
           >
             <option value="All">All Severities</option>
             <option value="Normal">Normal</option>
@@ -145,7 +145,7 @@ export default function History() {
               setSelectedType(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-3 pr-8 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none text-xs font-bold"
+            className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs font-bold transition-all shadow-sm"
           >
             <option value="All">All Classifications</option>
             <option value="Sensorineural">Sensorineural</option>
