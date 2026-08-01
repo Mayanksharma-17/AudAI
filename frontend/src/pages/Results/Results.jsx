@@ -553,6 +553,19 @@ export default function Results() {
                   return { label: 'Very Poor', color: 'text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20' };
                 };
 
+                const getPtaSdtInterpretation = (ptaVal, sdtVal) => {
+                  const diff = Math.abs(parseFloat(ptaVal) - parseFloat(sdtVal));
+                  const diffRounded = Math.round(diff);
+
+                  if (diffRounded <= 5) return { diff: diff.toFixed(1), label: "Excellent correlation (most common)", badge: "Excellent (≤5 dB)", color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20" };
+                  if (diffRounded === 6) return { diff: diff.toFixed(1), label: "Excellent correlation", badge: "Excellent (6 dB)", color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20" };
+                  if (diffRounded === 7) return { diff: diff.toFixed(1), label: "Very good correlation", badge: "Very Good (7 dB)", color: "text-teal-600 dark:text-teal-400 bg-teal-500/10 border-teal-500/20" };
+                  if (diffRounded === 8) return { diff: diff.toFixed(1), label: "Good correlation; still clinically acceptable", badge: "Good (8 dB)", color: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20" };
+                  if (diffRounded === 9) return { diff: diff.toFixed(1), label: "Acceptable correlation", badge: "Acceptable (9 dB)", color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20" };
+                  if (diffRounded === 10) return { diff: diff.toFixed(1), label: "Upper limit of the expected normal correlation", badge: "Upper Limit Normal (10 dB)", color: "text-orange-600 dark:text-orange-400 bg-orange-500/10 border-orange-500/20" };
+                  return { diff: diff.toFixed(1), label: "Exceeds expected normal correlation (Poor correlation)", badge: "Poor Correlation (>10 dB)", color: "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20" };
+                };
+
                 const lSRT = result.data.speech?.left?.srt ?? Math.round(parseFloat(leftPTA));
                 const lSDT = result.data.speech?.left?.sdt ?? Math.round(lSRT - 6);
                 const lWRS = result.data.speech?.left?.wrs ?? 96;
@@ -564,13 +577,13 @@ export default function Results() {
                 const lWRSBadge = getWRSBadge(lWRS);
                 const rWRSBadge = getWRSBadge(rWRS);
 
-                const lDiff = Math.abs(lSRT - parseFloat(leftPTA));
-                const rDiff = Math.abs(rSRT - parseFloat(rightPTA));
+                const lPtaSdt = getPtaSdtInterpretation(leftPTA, lSDT);
+                const rPtaSdt = getPtaSdtInterpretation(rightPTA, rSDT);
 
                 return (
                   <DashboardCard 
-                    title="Speech Audiometry Battery Evaluation" 
-                    subtitle="Functional Speech Recognition Threshold (SRT), Detection (SDT), and Discrimination (WRS %)"
+                    title="Speech Audiometry & PTA-SDT Correlation Analysis" 
+                    subtitle="Clinical correlation between Pure Tone Average (PTA) and Speech Detection Threshold (SDT)"
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                       {/* Left Ear Speech */}
@@ -597,11 +610,16 @@ export default function Results() {
                             <span className="text-base text-emerald-600 dark:text-emerald-400">{lWRS}%</span>
                           </div>
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center pt-1 border-t border-slate-200/30 dark:border-slate-800/30">
-                          <span>PTA-SRT Cross Agreement:</span>
-                          <span className={`font-bold ${lDiff <= 6 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                            {lDiff <= 6 ? '🟢 Good' : '🟡 Marginal'} ({lDiff.toFixed(1)} dB diff)
-                          </span>
+                        <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40 space-y-1">
+                          <div className="flex justify-between items-center text-[10px]">
+                            <span className="font-extrabold text-slate-400 uppercase">PTA vs SDT Diff</span>
+                            <span className={`font-black px-2 py-0.5 rounded-full border text-[10px] ${lPtaSdt.color}`}>
+                              {lPtaSdt.diff} dB Diff
+                            </span>
+                          </div>
+                          <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                            {lPtaSdt.label}
+                          </p>
                         </div>
                       </div>
 
@@ -629,11 +647,16 @@ export default function Results() {
                             <span className="text-base text-emerald-600 dark:text-emerald-400">{rWRS}%</span>
                           </div>
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center pt-1 border-t border-slate-200/30 dark:border-slate-800/30">
-                          <span>PTA-SRT Cross Agreement:</span>
-                          <span className={`font-bold ${rDiff <= 6 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                            {rDiff <= 6 ? '🟢 Good' : '🟡 Marginal'} ({rDiff.toFixed(1)} dB diff)
-                          </span>
+                        <div className="p-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40 space-y-1">
+                          <div className="flex justify-between items-center text-[10px]">
+                            <span className="font-extrabold text-slate-400 uppercase">PTA vs SDT Diff</span>
+                            <span className={`font-black px-2 py-0.5 rounded-full border text-[10px] ${rPtaSdt.color}`}>
+                              {rPtaSdt.diff} dB Diff
+                            </span>
+                          </div>
+                          <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                            {rPtaSdt.label}
+                          </p>
                         </div>
                       </div>
                     </div>

@@ -690,7 +690,7 @@ export default function Upload() {
                       Speech Audiometry Battery (SRT, SDT, WRS %)
                     </span>
                     <span className="text-[10px] font-bold text-slate-400">
-                      ★ SRT vs Speech PTA Cross-Validation (|SRT - PTA| ≤ 6 dB)
+                      ★ PTA vs SDT Clinical Correlation Scale (5dB Excellent → 10dB Upper Limit)
                     </span>
                   </div>
                   <div className="overflow-x-auto border border-slate-200/50 dark:border-slate-800/60 rounded-xl">
@@ -701,7 +701,7 @@ export default function Upload() {
                           <th className="px-3 py-3 text-center">Speech Recognition Threshold (SRT)</th>
                           <th className="px-3 py-3 text-center">Speech Detection Threshold (SDT)</th>
                           <th className="px-3 py-3 text-center">Word Recognition Score (WRS %)</th>
-                          <th className="px-3 py-3 text-center">PTA vs SRT Agreement</th>
+                          <th className="px-3 py-3 text-center">PTA vs SDT Clinical Correlation</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40 font-bold">
@@ -765,10 +765,29 @@ export default function Upload() {
                           <td className="px-3 py-2 text-center">
                             {(() => {
                               const lPTA = ((audiogramData.L500 ?? 20) + (audiogramData.L1000 ?? 20) + (audiogramData.L2000 ?? 20)) / 3;
-                              const diff = Math.abs((audiogramData.L_SRT ?? 20) - lPTA);
-                              if (diff <= 6) return <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">🟢 Good ({diff.toFixed(1)} dB)</span>;
-                              if (diff <= 10) return <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">🟡 Fair ({diff.toFixed(1)} dB)</span>;
-                              return <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20">🔴 Poor ({diff.toFixed(1)} dB)</span>;
+                              const lSDT = audiogramData.L_SDT !== undefined && audiogramData.L_SDT !== "" ? parseFloat(audiogramData.L_SDT) : 15;
+                              const diff = Math.abs(lPTA - lSDT);
+                              const diffRounded = Math.round(diff);
+
+                              let label = "Excellent correlation (most common)";
+                              let color = "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+
+                              if (diffRounded <= 5) label = "Excellent (most common)";
+                              else if (diffRounded === 6) label = "Excellent";
+                              else if (diffRounded === 7) label = "Very Good";
+                              else if (diffRounded === 8) label = "Good";
+                              else if (diffRounded === 9) label = "Acceptable";
+                              else if (diffRounded === 10) label = "Upper Limit Normal";
+                              else {
+                                label = "Poor Correlation";
+                                color = "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20";
+                              }
+
+                              return (
+                                <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${color}`}>
+                                  {diff.toFixed(1)} dB — {label}
+                                </span>
+                              );
                             })()}
                           </td>
                         </tr>
@@ -833,10 +852,29 @@ export default function Upload() {
                           <td className="px-3 py-2 text-center">
                             {(() => {
                               const rPTA = ((audiogramData.R500 ?? 20) + (audiogramData.R1000 ?? 20) + (audiogramData.R2000 ?? 20)) / 3;
-                              const diff = Math.abs((audiogramData.R_SRT ?? 20) - rPTA);
-                              if (diff <= 6) return <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">🟢 Good ({diff.toFixed(1)} dB)</span>;
-                              if (diff <= 10) return <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">🟡 Fair ({diff.toFixed(1)} dB)</span>;
-                              return <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20">🔴 Poor ({diff.toFixed(1)} dB)</span>;
+                              const rSDT = audiogramData.R_SDT !== undefined && audiogramData.R_SDT !== "" ? parseFloat(audiogramData.R_SDT) : 15;
+                              const diff = Math.abs(rPTA - rSDT);
+                              const diffRounded = Math.round(diff);
+
+                              let label = "Excellent correlation (most common)";
+                              let color = "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+
+                              if (diffRounded <= 5) label = "Excellent (most common)";
+                              else if (diffRounded === 6) label = "Excellent";
+                              else if (diffRounded === 7) label = "Very Good";
+                              else if (diffRounded === 8) label = "Good";
+                              else if (diffRounded === 9) label = "Acceptable";
+                              else if (diffRounded === 10) label = "Upper Limit Normal";
+                              else {
+                                label = "Poor Correlation";
+                                color = "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20";
+                              }
+
+                              return (
+                                <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${color}`}>
+                                  {diff.toFixed(1)} dB — {label}
+                                </span>
+                              );
                             })()}
                           </td>
                         </tr>
