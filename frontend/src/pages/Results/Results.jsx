@@ -310,7 +310,7 @@ export default function Results() {
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-widest">
               <Brain className="h-4 w-4 animate-pulse" />
-              AI Decision Output
+              AI Decision Output & Ear Classification
             </div>
             <div className="space-y-1">
               <h1 className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 dark:text-white leading-none">
@@ -334,6 +334,64 @@ export default function Results() {
             </div>
           </div>
         </div>
+
+        {/* Ear-wise AC-PTA & Degree of Hearing Loss Classification Cards */}
+        {(() => {
+          const getDegreeOfLoss = (pta) => {
+            const num = parseFloat(pta);
+            if (num <= 25) return { label: 'Normal', bg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' };
+            if (num <= 40) return { label: 'Mild', bg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' };
+            if (num <= 55) return { label: 'Moderate', bg: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' };
+            if (num <= 70) return { label: 'Moderately Severe', bg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20' };
+            if (num <= 90) return { label: 'Severe', bg: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' };
+            return { label: 'Profound', bg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20' };
+          };
+
+          const lDegree = getDegreeOfLoss(leftPTA);
+          const rDegree = getDegreeOfLoss(rightPTA);
+
+          return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 p-5 rounded-2xl shadow-soft space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                    Left Ear AC-PTA (0.5, 1, 2 kHz)
+                  </span>
+                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${lDegree.bg}`}>
+                    {lDegree.label} Hearing Loss
+                  </span>
+                </div>
+                <div className="flex items-baseline justify-between pt-1">
+                  <span className="text-3xl font-black font-heading text-slate-900 dark:text-white">
+                    {leftPTA} <span className="text-sm font-semibold text-slate-400">dB HL</span>
+                  </span>
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    Degree of Loss: <strong className="text-slate-800 dark:text-slate-100">{lDegree.label}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/40 p-5 rounded-2xl shadow-soft space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                    Right Ear AC-PTA (0.5, 1, 2 kHz)
+                  </span>
+                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${rDegree.bg}`}>
+                    {rDegree.label} Hearing Loss
+                  </span>
+                </div>
+                <div className="flex items-baseline justify-between pt-1">
+                  <span className="text-3xl font-black font-heading text-slate-900 dark:text-white">
+                    {rightPTA} <span className="text-sm font-semibold text-slate-400">dB HL</span>
+                  </span>
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    Degree of Loss: <strong className="text-slate-800 dark:text-slate-100">{rDegree.label}</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Patient demographics & Recommendations */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
