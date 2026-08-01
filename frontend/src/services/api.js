@@ -13,7 +13,7 @@ const api = axios.create({
 
 const DEFAULT_PROFILE = {
   name: "Dr. Mayank Sharma",
-  avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=250&h=250&fit=crop",
+  avatar: "https://ui-avatars.com/api/?name=Dr+Mayank+Sharma&background=2563eb&color=ffffff&size=250&bold=true",
   email: "mayank@audai.com",
   phone: "+91 98765 43210",
   hospital: "AIIMS Audiology & ENT Center",

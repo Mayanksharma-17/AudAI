@@ -16,10 +16,10 @@ import { mockApi } from '../../services/api';
 import DashboardCard from '../../components/DashboardCard/DashboardCard';
 
 const AVATAR_PRESETS = [
-  "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=250&h=250&fit=crop",
-  "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=250&h=250&fit=crop",
-  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=250&h=250&fit=crop",
-  "https://images.unsplash.com/photo-1594824813566-78853b70868f?q=80&w=250&h=250&fit=crop"
+  "https://ui-avatars.com/api/?name=Dr+Mayank+Sharma&background=2563eb&color=ffffff&size=250&bold=true",
+  "https://ui-avatars.com/api/?name=Dr+Sarah+Jenkins&background=0d9488&color=ffffff&size=250&bold=true",
+  "https://ui-avatars.com/api/?name=Dr+Robert+Chen&background=4f46e5&color=ffffff&size=250&bold=true",
+  "https://ui-avatars.com/api/?name=Dr+Elena+Rostova&background=0284c7&color=ffffff&size=250&bold=true"
 ];
 
 const SPECIALIZATION_TAGS = [
@@ -215,7 +215,11 @@ export default function Profile() {
               >
                 <img
                   src={formData.avatar}
-                  alt={formData.name}
+                  alt=""
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name || 'Doctor')}&background=2563eb&color=ffffff&size=250&bold=true`;
+                  }}
                   className="h-28 w-28 rounded-2xl object-cover border-2 border-primary-500 dark:border-primary-400 shadow-md transition-transform group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-slate-950/70 rounded-2xl opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity text-white text-[10px] font-bold gap-1">
@@ -259,7 +263,15 @@ export default function Profile() {
                       formData.avatar === preset ? 'border-primary-500 ring-2 ring-primary-500/40 opacity-100' : 'border-slate-300 dark:border-slate-700 opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={preset} alt="preset" className="h-full w-full object-cover" />
+                    <img 
+                      src={preset} 
+                      alt="" 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://ui-avatars.com/api/?name=Dr+${idx+1}&background=2563eb&color=ffffff&size=100&bold=true`;
+                      }}
+                      className="h-full w-full object-cover" 
+                    />
                   </button>
                 ))}
               </div>

@@ -294,7 +294,11 @@ export default function Navbar({ toggleSidebar }) {
           >
             <img
               src={profile.avatar}
-              alt={profile.name}
+              alt=""
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || 'Doctor')}&background=2563eb&color=ffffff&size=100&bold=true`;
+              }}
               className="h-8 w-8 rounded-xl object-cover border border-slate-200 dark:border-slate-800"
             />
             <div className="hidden sm:flex flex-col text-left">
